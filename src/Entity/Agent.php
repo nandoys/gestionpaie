@@ -2,49 +2,116 @@
 
 namespace App\Entity;
 
-use App\Repository\AgentRepository;
+use Assert\NotBlank;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AgentRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: AgentRepository::class)]
+#[ApiResource(
+        normalizationContext:[
+            'groups' => ['read:agent']
+        ]
+    )
+]
+#[UniqueEntity('matricule', message:"Ce numéro matricule {{ value }} existe déjà ")]
 class Agent
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('read:agent')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('read:agent')]
+    #[
+        Assert\NotBlank(message:"Le nom est obligatoire"),
+        Assert\Length(
+            min:2, minMessage:"Le nom ne peut pas être moins de 2 caractères",
+            max:20, maxMessage:"Le nom ne peut pas être plus de 20 caractères"
+        )
+    ]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('read:agent')]
+    #[
+        Assert\NotBlank(message:"Le postnom est obligatoire"),
+        Assert\Length(
+            min:2, minMessage:"Le postnom ne peut pas être moins de 2 caractères", 
+            max:20, maxMessage:"Le postnom ne peut pas être plus de 20 caractères"
+        )
+    ]
     private ?string $postnom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('read:agent')]
+    #[
+        Assert\NotBlank(message:"Le prenom est obligatoire"),
+        Assert\Length(
+            min:2, minMessage:"Le prenom ne peut pas être moins de 2 caractères", 
+            max:20, maxMessage:"Le prenom ne peut pas être plus de 20 caractères"
+        )
+    ]
     private ?string $prenom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[
+        Assert\NotBlank(message:"La date de naissance est obligatoire"),
+        Assert\Date(message:"{{ value }} n'est pas une date au format valide")
+    ]
     private ?\DateTimeInterface $dateNaissance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[
+        Assert\NotBlank(message:"Le lieu de naissance est obligatoire"),
+        Assert\Length(min:2, minMessage:"Le lieu de naissance ne peut pas être moins de 2 caractères")
+    ]
     private ?string $lieuNaissance = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[
+        Assert\NotBlank(message:"La date de début de contrat est obligatoire"),
+        Assert\Date(message:"{{ value }} n'est pas une date au format valide")
+    ]
     private ?\DateTimeInterface $debutContrat = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[
+        Assert\Date(message:"La valeur {{ value }} n'est pas une date au format valide")
+    ]
     private ?\DateTimeInterface $finContrat = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(message:"Le numéro de matricule est obligatoire"),
+    ]
     private ?string $matricule = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(message:"Le sexe est obligatoire"),
+        Assert\Choice(["Homme", "Femme"], message:"Le sexe doit être un homme ou une femme")
+    ]
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(message:"Le numéro CNSS est obligatoire"),
+    ]
     private ?string $numeroCnss = null;
 
     #[ORM\Column]
+    #[
+        Assert\NotBlank(message:"Le nombre d'enfant est obligatoire"),
+        Assert\Type(type: 'integer', message:"La valeur {{ value }} n'est pas un {{ type }} valide."),
+        Assert\PositiveOrZero(message:"Le nombre d'enfant n'est pas valide, doit être égal ou supérieur à zéro")
+    ]
     private ?int $nombreEnfant = null;
 
     #[ORM\ManyToOne(inversedBy: 'agents')]
@@ -72,6 +139,14 @@ class Agent
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getNomFamille(){
+        return "{$this->nom} {$this->postnom}";
+    }
+
+    public function getNomComplet(){
+        return "{$this->nom} {$this->postnom} {$this->prenom}";
     }
 
     public function getNom(): ?string
