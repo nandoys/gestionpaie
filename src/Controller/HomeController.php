@@ -4,7 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Agent;
 use App\Form\AgentType;
+use App\Entity\Indemnite;
+use App\Entity\Remuneration;
+use App\Form\AgentSalaireType;
 use App\Repository\AgentRepository;
+use App\Repository\IndemniteRepository;
+use App\Repository\RemunerationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,32 +35,51 @@ class HomeController extends AbstractController
 
     #[Route('/agent', name: 'home_agent')]
     #[Route('/agent/{id}/update', name: 'home_agent_update')]
-    public function agent(Request $request, AgentRepository $repo, Agent $agent, PaginatorInterface $paginator) {
+    public function agent(Request $request, AgentRepository $repoAgent, RemunerationRepository $repoRemuneration,
+     IndemniteRepository $repoIndem,Agent $agent, PaginatorInterface $paginator) {
 
         // check the mode to handle modal form
         $is_creating_agent = true;
 
         if($agent->getId() !== NULL) { 
-            $is_creating_agent = false; 
+            $is_creating_agent = false;
+
+            $remuneration = $repoRemuneration->findOneBy(['agent' => $agent]);
+
+            $indemnite = $repoIndem->findOneBy(['agent' => $agent]);
+           
+        } else {
+            $remuneration = new Remuneration();
+
+            $indemnite = new Indemnite();
         }
+
         
         // get all agents
         //$agents = $repo->findAll();
 
         $agents = $paginator->paginate(
-            $repo->findAll(), /* query NOT result */
+            $repoAgent->findAll(), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
 
-        $form = $this->createForm(AgentType::class, $agent);
+        $form = $this->createForm(AgentSalaireType::class, [
+            'agent'=>$agent,
+            'remuneration'=>$remuneration,
+            'indemnite'=>$indemnite
+        ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if($is_creating_agent) {  
+            if($is_creating_agent) { 
+                
+                $agent->setRemuneration($remuneration);
+                $agent->setIndemnite($indemnite);
                 $this->em->persist($agent);
+
                 $this->addFlash('success', "Vous venez d'ajouter un nouvel agent {$agent->getNomComplet()} (Matricule: {$agent->getMatricule()})"); 
             } else {
                 $this->addFlash('success', "Vos modifications sur l'agent {$agent->getNomComplet()} (Matricule: {$agent->getMatricule()}) ont été enregistrées");
@@ -67,9 +91,9 @@ class HomeController extends AbstractController
         }
 
         return  $this->render('home/agent.html.twig', [
-            'form_new_agent'=>$form->createView(),
+            'form_agent_salaire'=>$form->createView(),
             'agents' => $agents,
-            'is_creating_agent' => $is_creating_agent
+            'is_creating_agent' => $is_creating_agent,
         ]);
     }
 

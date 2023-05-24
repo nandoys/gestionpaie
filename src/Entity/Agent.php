@@ -18,7 +18,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         ]
     )
 ]
-#[UniqueEntity('matricule', message:"Ce numéro matricule {{ value }} existe déjà ")]
+#[
+    UniqueEntity('matricule', message:"Ce numéro matricule {{ value }} existe déjà "),
+    UniqueEntity('numeroCnss', message:"Ce numéro CNSS {{ value }} existe déjà ")
+]
 class Agent
 {
     #[ORM\Id]
@@ -61,10 +64,8 @@ class Agent
     private ?string $prenom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[
-        Assert\NotBlank(message:"La date de naissance est obligatoire"),
-        Assert\Date(message:"{{ value }} n'est pas une date au format valide")
-    ]
+    #[Assert\NotBlank(message:"La date de naissance est obligatoire")]
+    #[Assert\Type(type:"\DateTime", message:"La valeur n'est pas une date au format valide")]
     private ?\DateTimeInterface $dateNaissance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -77,13 +78,13 @@ class Agent
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[
         Assert\NotBlank(message:"La date de début de contrat est obligatoire"),
-        Assert\Date(message:"{{ value }} n'est pas une date au format valide")
+        Assert\Type(type:"\DateTime", message:"La valeur n'est pas une date au format valide")
     ]
     private ?\DateTimeInterface $debutContrat = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[
-        Assert\Date(message:"La valeur {{ value }} n'est pas une date au format valide")
+        Assert\Type(type:"\DateTime", message:"La valeur n'est pas une date au format valide")
     ]
     private ?\DateTimeInterface $finContrat = null;
 
@@ -103,6 +104,7 @@ class Agent
     #[ORM\Column(length: 255)]
     #[
         Assert\NotBlank(message:"Le numéro CNSS est obligatoire"),
+        Assert\NotNull(message:"Le numéro CNSS ne peut pas être null")
     ]
     private ?string $numeroCnss = null;
 

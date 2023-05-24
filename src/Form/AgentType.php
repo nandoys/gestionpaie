@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 
 class AgentType extends AbstractType
 {
@@ -22,17 +23,31 @@ class AgentType extends AbstractType
             ->add('nom')
             ->add('postnom')
             ->add('prenom')
-            ->add('dateNaissance')
-            ->add('lieuNaissance')
-            ->add('debutContrat')
-            ->add('finContrat')
-            ->add('matricule')
             ->add('sexe', ChoiceType::class, [
                 'choices'=>["Homme"=>"Homme", "Femme"=>"Femme"],
                 'placeholder' => "Choisir sexe"
             ])
+            ->add('dateNaissance', BirthdayType::class, [
+                'widget' => 'single_text',
+            ])
+            ->add('lieuNaissance')
+            ->add('etatCivil', EntityType::class, [
+                'class'=>EtatCivil::class,
+                'choice_label' => 'titre',
+                'placeholder' => "Choisir Etat civil"
+            ])
+            ->add('debutContrat', null, [
+                'widget' => 'single_text',
+            ])
+            ->add('finContrat', null, [
+                'widget' => 'single_text',
+            ])
+            ->add('matricule')
+
             ->add('numeroCnss')
-            ->add('nombreEnfant')
+            ->add('nombreEnfant', null, [
+                'attr'=>['min'=>0]
+            ])
             ->add('fonction', EntityType::class, [
                 'class'=>Fonction::class,
                 'choice_label' => 'titre',
@@ -43,17 +58,11 @@ class AgentType extends AbstractType
                 'choice_label' => 'titre',
                 'placeholder' => "Choisir le niveau d'étude"
             ])
-            ->add('etatCivil', EntityType::class, [
-                'class'=>EtatCivil::class,
-                'choice_label' => 'titre',
-                'placeholder' => "Choisir Etat civil"
-            ])
             ->add('nationalite', EntityType::class, [
                 'class'=>Nationalite::class,
                 'choice_label' => 'titre',
                 'placeholder' => "Choisir nationalité"
             ])
-            ->add('Creer', SubmitType::class)
         ;
     }
 
