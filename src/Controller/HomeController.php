@@ -44,9 +44,19 @@ class HomeController extends AbstractController
         if($agent->getId() !== NULL) { 
             $is_creating_agent = false;
 
-            $remuneration = $repoRemuneration->findOneBy(['agent' => $agent]);
+            if ($agent->getRemuneration() === NULL) {
+                # code...
+                $remuneration = new Remuneration();
+            } else {
+                $remuneration = $repoRemuneration->findOneBy(['agent' => $agent]);
+            }
 
-            $indemnite = $repoIndem->findOneBy(['agent' => $agent]);
+            if ($agent->getIndemnite() === NULL) {
+                # code ..
+                $indemnite = new Indemnite();
+            } else {
+                $indemnite = $repoIndem->findOneBy(['agent' => $agent]);
+            }
            
         } else {
             $remuneration = new Remuneration();
@@ -82,6 +92,16 @@ class HomeController extends AbstractController
 
                 $this->addFlash('success', "Vous venez d'ajouter un nouvel agent {$agent->getNomComplet()} (Matricule: {$agent->getMatricule()})"); 
             } else {
+                if ($agent->getRemuneration() === NULL) {
+                    # code...
+                    $agent->setRemuneration($remuneration);
+                } 
+    
+                if ($agent->getIndemnite() === NULL) {
+                    # code ..
+                    $agent->setIndemnite($indemnite);
+                }
+
                 $this->addFlash('success', "Vos modifications sur l'agent {$agent->getNomComplet()} (Matricule: {$agent->getMatricule()}) ont été enregistrées");
             }
            
@@ -105,5 +125,12 @@ class HomeController extends AbstractController
         }
 
         return $this->redirectToRoute('home_agent');
+    }
+
+    #[Route('/paiement', name: 'home_agent_paiement')]
+    public function agent_paiement() 
+    {
+
+        return  $this->render('home/paiement.html.twig');
     }
 }

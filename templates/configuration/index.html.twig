@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement{% endblock %}
+
+{% block content %}
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2 position-relative">Configuration</h1>
+        </div>
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h4 class="h5 position-relative">Fonctions</h4>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#fonctionModal">Nouvelle fonction</button>
+
+                     <!--  modal -->
+                    <div class="modal fade" id="fonctionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="fonctionModalLabel" aria-hidden="true" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-4" id="agentModalFullscreenXxlLabel">
+                                    {% if is_creating_fonction %}Nouvelle {% else %} Modifier {% endif %}fonction
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                {{ form_start(form_fonction) }}
+                                    <div class="modal-body">
+                                        <div class="col-12">
+                                            
+                                            <div class="row mb-2">
+                                                <div class="col">
+                                                    <label for="nom" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_fonction.titre) }}</label>
+                                                    {{ form_widget(form_fonction.titre, {'attr': {'placeholder':"Tire de la fonction"}}) }}
+                                                    <div class="invalid-feedback">
+                                                        {{ form_errors(form_fonction.titre) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col">
+                                                    <label for="nom" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_fonction.baseSalarial) }}</label>
+                                                    {{ form_widget(form_fonction.baseSalarial, {'attr': {'placeholder':"Salaire de base de la fonction"}}) }}
+                                                    <div class="invalid-feedback">
+                                                        {{ form_errors(form_fonction.baseSalarial) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">{% if is_creating_fonction %} Créer {% else %} Modifier {% endif %}</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                    </div>
+                                {{ form_end(form_fonction) }}
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Importer</button>
+                </div>
+            </div>
+        </div>
+
+        {% for message in app.flashes('success') %}
+          <div class="alert alert-success alert-dismissible" role="alert">{{ message }}</div>
+        {% endfor %}
+
+        <div class="table-responsive">
+            {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">{{ message }}</div>
+            {% endfor %}
+
+            <table class="table  table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ knp_pagination_sortable(fonctions, 'Poste', 'titre') }}</th>
+                        <th scope="col">{{ knp_pagination_sortable(fonctions, 'Salaire de base', 'baseSalarial') }}</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+            
+                    {% for fonction in fonctions %}
+                    <tr>
+                    <td>{{ fonction.titre }}</td>
+                    <td>{{ fonction.baseSalarial }}</td>
+                    <td>
+                        
+                        {% if page_param == null %}
+                        <a class="btn btn-primary btn-sm update-agent"  data-id="{{ fonction.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                        onclick="updateBtn(this, '{{ path('app_configuration_fonction_update', {'id':fonction.id }) }}')">Modifier<a>
+                        {% else %}
+                        <a class="btn btn-primary btn-sm update-agent"  data-id="{{ fonction.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                        onclick="updateBtn(this, '{{ path('app_configuration_fonction_update', {'id':fonction.id, 'page':page_param}) }}')">Modifier<a>
+                        {% endif %}
+                        <a class="btn btn-danger btn-sm delete-agent" data-id="{{ fonction.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
+                        onclick="delBtn(this, '{{ path('app_configuration_fonction_delete', {'id':fonction.id }) }}')">Supprimer</a>
+                    </td>
+                    </tr>
+                    {% endfor%}
+                </tbody>
+            </table>
+        <div>
+        <nav aria-label="Page navigation example">
+            {{ knp_pagination_render(fonctions) }}
+        </nav>
+    </main>
+
+{% endblock %}
+
+{% block extra_javascripts %}
+
+  <script src="{{ asset('js/app/fonction.js') }}"></script>
+
+{% endblock %}

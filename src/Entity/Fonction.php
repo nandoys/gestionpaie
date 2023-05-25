@@ -2,12 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\FonctionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\FonctionRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Positive;
 
 #[ORM\Entity(repositoryClass: FonctionRepository::class)]
+#[ApiResource]
+#[UniqueEntity('titre', message:"Cette fonction existe déjà")]
 class Fonction
 {
     #[ORM\Id]
@@ -15,11 +22,22 @@ class Fonction
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[
+        ORM\Column(length: 255),
+        NotBlank(message: "Le titre est obligatoire"),
+        Length(min: 3, minMessage: "Le titre doit être d'au moins 3 caractères")
+    ]
     private ?string $titre = null;
 
     #[ORM\OneToMany(mappedBy: 'fonction', targetEntity: Agent::class)]
     private Collection $agents;
+
+    #[
+        ORM\Column,
+        NotBlank(message: "La base salariale est obligatoire"),
+        Positive(message: "Le salaire doit être un nombre positif supérieur à zéro")
+    ]
+    private ?float $baseSalarial = null;
 
     public function __construct()
     {
@@ -69,6 +87,18 @@ class Fonction
                 $agent->setFonction(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBaseSalarial(): ?float
+    {
+        return $this->baseSalarial;
+    }
+
+    public function setBaseSalarial(float $baseSalarial): self
+    {
+        $this->baseSalarial = $baseSalarial;
 
         return $this;
     }
