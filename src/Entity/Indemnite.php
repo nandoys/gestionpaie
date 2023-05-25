@@ -93,4 +93,9 @@ class Indemnite
 
         return $this;
     }
+
+    public function calculTotalIndemnite() 
+    {
+        return $this->transport + $this->logement + $this->allocationFamiliale + $this->autres;
+    }
 }

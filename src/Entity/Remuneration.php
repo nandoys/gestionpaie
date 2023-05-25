@@ -78,4 +78,9 @@ class Remuneration
 
         return $this;
     }
+
+    public function calculBrutImposable()
+    {
+        return $this->base + $this->primeDiplome + $this->heureSupplementaire;
+    }
 }

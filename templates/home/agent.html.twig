@@ -305,10 +305,10 @@
               <td>{{ agent.nombreEnfant }}</td>
               <td>{{ agent.fonction.titre }}</td>
               <td>
-                <a class="btn btn-primary btn-sm update-agent"  data-id="{{ agent.id }}"
+                <a class="btn btn-primary btn-sm update-agent"  data-id="{{ agent.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
                 onclick="updateBtn(this, '{{ path('home_agent_update', {'id':agent.id }) }}')">Modifier<a>
 
-                <a class="btn btn-danger btn-sm delete-agent" data-id="{{ agent.id }}" 
+                <a class="btn btn-danger btn-sm delete-agent" data-id="{{ agent.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
                 onclick="delBtn(this, '{{ path('home_agent_delete', {'id':agent.id }) }}')">Supprimer</a>
               </td>
             </tr>

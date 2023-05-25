@@ -4,13 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Agent;
 use App\Form\AgentType;
+use App\Entity\Paiement;
 use App\Entity\Indemnite;
+use App\Form\PaiementType;
 use App\Entity\Remuneration;
 use App\Form\AgentSalaireType;
 use App\Repository\AgentRepository;
 use App\Repository\IndemniteRepository;
-use App\Repository\RemunerationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\RemunerationRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,6 +75,7 @@ class HomeController extends AbstractController
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
+    
 
         $form = $this->createForm(AgentSalaireType::class, [
             'agent'=>$agent,
@@ -127,10 +130,17 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('home_agent');
     }
 
-    #[Route('/paiement', name: 'home_agent_paiement')]
-    public function agent_paiement() 
+    #[Route('/agent/{id}/paiement', name: 'home_agent_paiement')]
+    public function agent_paiement(Agent $agent) 
     {
 
-        return  $this->render('home/paiement.html.twig');
+        $paiemnt = new Paiement($agent->getRemuneration(), $agent->getIndemnite());
+
+
+        $form_paie = $this->createForm(PaiementType::class, $paiemnt);
+        
+        return  $this->render('home/paiement.html.twig', [
+            'form_paie' => $form_paie
+        ]);
     }
 }

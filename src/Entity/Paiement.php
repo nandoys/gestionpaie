@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PaiementRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaiementRepository::class)]
@@ -36,6 +37,48 @@ class Paiement
 
     #[ORM\Column]
     private ?float $pretAutre = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $datepaiement = null;
+
+    #[ORM\Column]
+    private ?float $base = null;
+
+    #[ORM\Column]
+    private ?float $primeDiplome = null;
+
+    #[ORM\Column]
+    private ?float $heureSupplementaire = null;
+
+    #[ORM\Column]
+    private ?float $transport = null;
+
+    #[ORM\Column]
+    private ?float $logement = null;
+
+    #[ORM\Column]
+    private ?float $allocationFamiliale = null;
+
+    #[ORM\Column]
+    private ?float $autres = null;
+
+    public function __construct(Remuneration $remuneration, Indemnite $indemnite)
+    {
+        // Données sur la rémunération
+        
+        $this->base = $remuneration->getBase();
+        $this->primeDiplome = $remuneration->getPrimeDiplome();
+        $this->heureSupplementaire = $remuneration->getHeureSupplementaire();
+
+        // Données des indemnités
+        $this->transport = $indemnite->getTransport();
+        $this->logement = $indemnite->getLogement();
+        $this->allocationFamiliale = $indemnite->getAllocationFamiliale();
+        $this->autres = $indemnite->getAutres();
+
+        $this->net = $remuneration->calculBrutImposable() +  $indemnite->calculTotalIndemnite();
+
+    }
 
     public function getId(): ?int
     {
@@ -134,6 +177,102 @@ class Paiement
     public function setPretAutre(float $pretAutre): self
     {
         $this->pretAutre = $pretAutre;
+
+        return $this;
+    }
+
+    public function getDatepaiement(): ?\DateTimeInterface
+    {
+        return $this->datepaiement;
+    }
+
+    public function setDatepaiement(\DateTimeInterface $datepaiement): self
+    {
+        $this->datepaiement = $datepaiement;
+
+        return $this;
+    }
+
+    public function getBase(): ?float
+    {
+        return $this->base;
+    }
+
+    public function setBase(float $base): self
+    {
+        $this->base = $base;
+
+        return $this;
+    }
+
+    public function getPrimeDiplome(): ?float
+    {
+        return $this->primeDiplome;
+    }
+
+    public function setPrimeDiplome(float $primeDiplome): self
+    {
+        $this->primeDiplome = $primeDiplome;
+
+        return $this;
+    }
+
+    public function getHeureSupplementaire(): ?float
+    {
+        return $this->heureSupplementaire;
+    }
+
+    public function setHeureSupplementaire(float $heureSupplementaire): self
+    {
+        $this->heureSupplementaire = $heureSupplementaire;
+
+        return $this;
+    }
+
+    public function getTransport(): ?float
+    {
+        return $this->transport;
+    }
+
+    public function setTransport(float $transport): self
+    {
+        $this->transport = $transport;
+
+        return $this;
+    }
+
+    public function getLogement(): ?float
+    {
+        return $this->logement;
+    }
+
+    public function setLogement(float $logement): self
+    {
+        $this->logement = $logement;
+
+        return $this;
+    }
+
+    public function getAllocationFamiliale(): ?float
+    {
+        return $this->allocationFamiliale;
+    }
+
+    public function setAllocationFamiliale(float $allocationFamiliale): self
+    {
+        $this->allocationFamiliale = $allocationFamiliale;
+
+        return $this;
+    }
+
+    public function getAutres(): ?float
+    {
+        return $this->autres;
+    }
+
+    public function setAutres(float $autres): self
+    {
+        $this->autres = $autres;
 
         return $this;
     }
