@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Paiement;
+use App\Event\PaieEventSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,6 +31,7 @@ class PaiementType extends AbstractType
             ->add('logement')
             ->add('allocationFamiliale')
             ->add('autres')
+            ->addEventSubscriber(new PaieEventSubscriber())
         ;
     }
 

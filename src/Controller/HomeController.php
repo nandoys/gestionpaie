@@ -11,6 +11,7 @@ use App\Entity\Remuneration;
 use App\Form\AgentSalaireType;
 use App\Repository\AgentRepository;
 use App\Repository\IndemniteRepository;
+use App\Repository\PaiementRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\RemunerationRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -130,17 +131,32 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('home_agent');
     }
 
-    #[Route('/agent/{id}/paiement', name: 'home_agent_paiement')]
-    public function agent_paiement(Agent $agent) 
+    #[Route('/agent/{id}/paiements', name: 'home_agent_paiement')]
+    public function agent_liste_paiement(Agent $agent, PaiementRepository $repoPaie)
+    {
+        $paiements = $repoPaie->findBy([]);
+        return  $this->render('home/paiement.html.twig', [
+            'agent' => $agent
+        ]);
+    }
+
+    #[Route('/agent/{id}/paie', name: 'home_agent_paiement')]
+    public function agent_paiement(Agent $agent, Request $request) 
     {
 
-        $paiemnt = new Paiement($agent->getRemuneration(), $agent->getIndemnite());
+        $paiement = new Paiement($agent->getRemuneration(), $agent->getIndemnite(), $agent);
 
+        $form_paie = $this->createForm(PaiementType::class, $paiement);
 
-        $form_paie = $this->createForm(PaiementType::class, $paiemnt);
+        $form_paie->handleRequest($request);
+
+        if ( $form_paie->issubmitted() &&  $form_paie->isValid()) {
+        
+        }
         
         return  $this->render('home/paiement.html.twig', [
-            'form_paie' => $form_paie
+            'form_paie' => $form_paie,
+            'agent' => $agent
         ]);
     }
 }

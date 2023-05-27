@@ -288,7 +288,7 @@
               <th scope="col">Cnss</th>
               <th scope="col">{{ knp_pagination_sortable(agents, "Nombre d'enfant", 'nombreEnfant') }}</th>
               <th scope="col">Fonction</th>
-               <th scope="col">Actions</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -310,6 +310,12 @@
 
                 <a class="btn btn-danger btn-sm delete-agent" data-id="{{ agent.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
                 onclick="delBtn(this, '{{ path('home_agent_delete', {'id':agent.id }) }}')">Supprimer</a>
+              </td>
+              <td>
+                <a class="btn btn-secondary btn-sm" data-id="{{ agent.id }}" href=""
+                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                  paiements
+                </a>
               </td>
             </tr>
             {% endfor%}

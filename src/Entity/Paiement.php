@@ -62,8 +62,14 @@ class Paiement
     #[ORM\Column]
     private ?float $autres = null;
 
-    public function __construct(Remuneration $remuneration, Indemnite $indemnite)
+    #[ORM\ManyToOne(inversedBy: 'paiements')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Agent $agent = null;
+
+    public function __construct(Remuneration $remuneration, Indemnite $indemnite, Agent $agent)
     {
+        // définir l'agent à payer
+        $this->agent = $agent;
         // Données sur la rémunération
         
         $this->base = $remuneration->getBase();
@@ -273,6 +279,18 @@ class Paiement
     public function setAutres(float $autres): self
     {
         $this->autres = $autres;
+
+        return $this;
+    }
+
+    public function getAgent(): ?Agent
+    {
+        return $this->agent;
+    }
+
+    public function setAgent(?Agent $agent): self
+    {
+        $this->agent = $agent;
 
         return $this;
     }
