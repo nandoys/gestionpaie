@@ -21,8 +21,8 @@ class PaiementType extends AbstractType
             ->add('pretFraisScolaire')
             ->add('pretDeuil')
             ->add('pretAutre')
-            ->add('datepaiement', null, [
-                'widget'=>'single_text'
+            ->add('dateAt', null, [
+                'widget' => 'single_text'
             ])
             ->add('base')
             ->add('primeDiplome')

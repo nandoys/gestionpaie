@@ -10,11 +10,12 @@ class PaieEventSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents() : array
     {
-        return [FormEvents::POST_SUBMIT  => 'deduction'];
+        return [FormEvents::PRE_SET_DATA  => 'deduction'];
     }
 
     public function deduction(FormEvent $event) : void
     {
-        dump($event->getData());
+        $event->getData()->setCnss(12);
+        $event->setData($event->getData());
     }
 }

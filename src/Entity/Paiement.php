@@ -39,7 +39,7 @@ class Paiement
     private ?float $pretAutre = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $datepaiement = null;
+    private ?\DateTimeInterface $dateAt = null;
 
     #[ORM\Column]
     private ?float $base = null;
@@ -187,14 +187,14 @@ class Paiement
         return $this;
     }
 
-    public function getDatepaiement(): ?\DateTimeInterface
+    public function getDateAt(): ?\DateTimeInterface
     {
-        return $this->datepaiement;
+        return $this->dateAt;
     }
 
-    public function setDatepaiement(\DateTimeInterface $datepaiement): self
+    public function setDateAt(\DateTimeInterface $dateAt): self
     {
-        $this->datepaiement = $datepaiement;
+        $this->dateAt = $dateAt;
 
         return $this;
     }

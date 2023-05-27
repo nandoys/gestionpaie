@@ -150,8 +150,8 @@ class HomeController extends AbstractController
 
         $form_paie->handleRequest($request);
 
-        if ( $form_paie->issubmitted() &&  $form_paie->isValid()) {
-        
+        if ($request->isXmlHttpRequest() ) {
+            dump($request->query);
         }
         
         return  $this->render('home/paiement.html.twig', [
