@@ -18,6 +18,12 @@ var paiement_autres = $('#paiement_autres')
 var paiement_cnss = $('#paiement_cnss')
 var paiement_ipr = $('#paiement_ipr')
 
+
+/**
+ * Définit les données et envoi une requête XMLHttpRequest
+ * @param {*} selector 
+ * @returns 
+ */
 function setData(selector) {
     
     // stocke le formulaire
@@ -58,7 +64,6 @@ function setData(selector) {
 }
 
 /**
- * Ecoute l'événement change du champ paiement_cnss
- * Envoi une requête XMLHttpRequest
+ * Ecoute l'événement change du champ paiement_cnss et délenche une fonction
  */
 paiement_cnss.change(setData)
