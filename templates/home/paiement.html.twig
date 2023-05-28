@@ -59,7 +59,7 @@
                             <div class="col-12">
                                 <div class="row mb-2">
                                     <div class="col">
-                                        <label for="paiement_dateAt" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.dateAt) }}</label>
+                                        <label for="paiement_dateAt" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.dateAt, 'Date du paiement') }}</label>
                                         {{ form_widget(form_paie.dateAt, {'attr': {'placeholder':"Date de paiement"}}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.dateAt) }}
@@ -202,11 +202,8 @@
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col">
-                                        <label for="paiement_net" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.net, 'Net à payer') }}</label>
-                                        {{ form_widget(form_paie.net, {'attr': {'placeholder':"Montant net"}}) }}
-                                        <div class="invalid-feedback">
-                                            {{ form_errors(form_paie.net) }}
-                                        </div>
+                                        <span class="h5 form-label col-form-label col-form-label-sm">Net à payer</span>
+                                        <h4>{{ paiement.calculNetAPayer }} FC</h4>
                                     </div>
                                 </div>
                                 <div class="row mt-6">

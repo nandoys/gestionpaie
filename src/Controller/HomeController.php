@@ -27,12 +27,13 @@ class HomeController extends AbstractController
     public function __construct(EntityManagerInterface $em)
     {
         $this->em =  $em;
+       
     }
 
     #[Route('/', name: 'home_index')]
     public function index(): Response
     {
-    
+        
         return $this->render('home/index.html.twig');
     }
 
@@ -156,7 +157,8 @@ class HomeController extends AbstractController
         
         return  $this->render('home/paiement.html.twig', [
             'form_paie' => $form_paie,
-            'agent' => $agent
+            'agent' => $agent,
+            'paiement' => $paiement
         ]);
     }
 }

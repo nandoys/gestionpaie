@@ -15,7 +15,7 @@ class PaieEventSubscriber implements EventSubscriberInterface
 
     public function deduction(FormEvent $event) : void
     {
-        $event->getData()->setCnss(12);
+       
         $event->setData($event->getData());
     }
 }

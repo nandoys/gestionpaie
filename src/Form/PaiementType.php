@@ -13,7 +13,6 @@ class PaiementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('net')
             ->add('cnss')
             ->add('ipr')
             ->add('avanceSalaire')

@@ -15,9 +15,6 @@ class Paiement
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?float $net = null;
-
-    #[ORM\Column]
     private ?float $cnss = null;
 
     #[ORM\Column]
@@ -91,17 +88,6 @@ class Paiement
         return $this->id;
     }
 
-    public function getNet(): ?float
-    {
-        return $this->net;
-    }
-
-    public function setNet(float $net): self
-    {
-        $this->net = $net;
-
-        return $this;
-    }
 
     public function getCnss(): ?float
     {
@@ -293,5 +279,36 @@ class Paiement
         $this->agent = $agent;
 
         return $this;
+    }
+
+    public function calculBrutImposable() : ?float
+    {
+        $remunerations = array($this->base, $this->primeDiplome, $this->heureSupplementaire);
+        return array_sum($remunerations);
+    }
+
+    public function calculTotalIndemnite() : ?float 
+    {
+        $indemnites = array($this->transport, $this->logement, $this->allocationFamiliale, $this->autres);
+        return  array_sum($indemnites);
+    }
+
+    public function calculSalaireBrut() : ?float
+    {
+        $gains = array($this->calculBrutImposable(), $this->calculTotalIndemnite());
+        return array_sum($gains);
+    }
+
+    public function calculDeduction() : ?float
+    {
+        $deductions = array($this->cnss, $this->ipr, $this->avanceSalaire, $this->pretLogement, $this->pretFraisScolaire, 
+        $this->pretDeuil, $this->pretAutre);
+
+        return array_sum($deductions);
+    }
+
+    public function calculNetAPayer(): ?float
+    {
+        return $this->calculSalaireBrut() - $this->calculDeduction();
     }
 }
