@@ -79,7 +79,7 @@ class Paiement
         $this->allocationFamiliale = $indemnite->getAllocationFamiliale();
         $this->autres = $indemnite->getAutres();
 
-        $this->net = $remuneration->calculBrutImposable() +  $indemnite->calculTotalIndemnite();
+        $this->dateAt = new \DateTime();
 
     }
 

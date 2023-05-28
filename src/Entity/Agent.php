@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use Assert\NotBlank;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AgentRepository;
 use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -80,19 +79,21 @@ class Agent
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[
         Assert\NotBlank(message:"La date de début de contrat est obligatoire"),
-        Assert\Type(type:"\DateTime", message:"La valeur n'est pas une date au format valide")
+        Assert\Type(type:"\DateTime", message:"La valeur n'est pas une date au format valide"),
+        Assert\LessThan(propertyPath:"finContrat")
     ]
     private ?\DateTimeInterface $debutContrat = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[
-        Assert\Type(type:"\DateTime", message:"La valeur n'est pas une date au format valide")
+        Assert\Type(type:"\DateTime", message:"La valeur n'est pas une date au format valide"),
+        Assert\GreaterThan(propertyPath:"debutContrat")
     ]
     private ?\DateTimeInterface $finContrat = null;
 
     #[ORM\Column(length: 255)]
     #[
-        Assert\NotBlank(message:"Le numéro de matricule est obligatoire"),
+        Assert\NotBlank(message:"Le matricule est obligatoire"),
     ]
     private ?string $matricule = null;
 
@@ -403,5 +404,23 @@ class Agent
         }
 
         return $this;
+    }
+
+    public function typeContrat() : ?string
+    {
+        if ($this->finContrat === NULL) {
+            return "CDI";
+        } else {
+            return "CDD";
+        }
+    }
+
+    public function statusContrat() : ?string
+    {
+        if ($this->finContrat !== NULL && $this->finContrat < new \DateTime('today')) {
+            return "terminé";
+        } else {
+            return "en cours";
+        }
     }
 }

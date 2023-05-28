@@ -22,13 +22,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-    private $em;
 
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em =  $em;
-       
-    }
+    public function __construct(private EntityManagerInterface $em) {}
 
     #[Route('/', name: 'home_index')]
     public function index(): Response
@@ -73,8 +68,8 @@ class HomeController extends AbstractController
         //$agents = $repo->findAll();
 
         $agents = $paginator->paginate(
-            $repoAgent->findAll(), /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
+            $repoAgent->findAll(), 
+            $request->query->getInt('page', 1),
             10 /*limit per page*/
         );
     
@@ -132,33 +127,48 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('home_agent');
     }
 
-    #[Route('/agent/{id}/paiements', name: 'home_agent_paiement')]
-    public function agent_liste_paiement(Agent $agent, PaiementRepository $repoPaie)
+    #[Route('/agent/{id}/paiements', name: 'home_agent_liste_paiement')]
+    public function agent_liste_paiement(Agent $agent, Request $request, PaiementRepository $repoPaie, PaginatorInterface $paginator)
     {
-        $paiements = $repoPaie->findBy([]);
-        return  $this->render('home/paiement.html.twig', [
-            'agent' => $agent
+        $paiements = $repoPaie->findByAgent($agent);
+
+        $paiements = $paginator->paginate(
+            $repoPaie->findByAgent($agent),
+            $request->query->getInt('page', 1),
+            10 /*limit per page*/
+        );
+
+        return  $this->render('home/agent_liste_paiement.html.twig', [
+            'agent' => $agent,
+            'paiements' => $paiements
         ]);
     }
 
     #[Route('/agent/{id}/paie', name: 'home_agent_paiement')]
-    public function agent_paiement(Agent $agent, Request $request) 
+    #[Route('/agent/{id}/paie/{paiement_id}', name: 'home_agent_paiement_update')]
+    public function agent_paiement(Agent $agent, Request $request, PaiementRepository $repoPaie) 
     {
-
-        $paiement = new Paiement($agent->getRemuneration(), $agent->getIndemnite(), $agent);
-
+        $paiement_id = $request->attributes->get('paiement_id');
+        $paiement = $repoPaie->findOneBy(['id'=>$paiement_id,'agent' =>$agent]) ?? new Paiement($agent->getRemuneration(), $agent->getIndemnite(), $agent);
+  
         $form_paie = $this->createForm(PaiementType::class, $paiement);
 
         $form_paie->handleRequest($request);
 
-        if ($request->isXmlHttpRequest() ) {
-            dump($request->query);
+        if ($form_paie->isSubmitted() && $form_paie->isValid()) {
+            
+            if ($paiement->getId() === NULL ) {
+                $this->em->persist($paiement);
+            }
+            
+            $this->em->flush();
         }
         
-        return  $this->render('home/paiement.html.twig', [
+        return  $this->render('home/agent_paie.html.twig', [
             'form_paie' => $form_paie,
             'agent' => $agent,
-            'paiement' => $paiement
+            'paiement' => $paiement,
         ]);
     }
+
 }

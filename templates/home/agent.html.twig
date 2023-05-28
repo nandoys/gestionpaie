@@ -286,7 +286,6 @@
               <th scope="col">Etat civil</th>
               <th scope="col">Niveau d'étude</th>
               <th scope="col">Cnss</th>
-              <th scope="col">{{ knp_pagination_sortable(agents, "Nombre d'enfant", 'nombreEnfant') }}</th>
               <th scope="col">Fonction</th>
               <th scope="col">Actions</th>
             </tr>
@@ -302,7 +301,6 @@
               <td>{{ agent.etatCivil.titre }}</td>
               <td>{{ agent.diplome.titre }}</td>
               <td>{{ agent.numeroCnss }}</td>
-              <td>{{ agent.nombreEnfant }}</td>
               <td>{{ agent.fonction.titre }}</td>
               <td>
                 <a class="btn btn-primary btn-sm update-agent"  data-id="{{ agent.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
@@ -312,7 +310,7 @@
                 onclick="delBtn(this, '{{ path('home_agent_delete', {'id':agent.id }) }}')">Supprimer</a>
               </td>
               <td>
-                <a class="btn btn-secondary btn-sm" data-id="{{ agent.id }}" href=""
+                <a class="btn btn-secondary btn-sm" data-id="{{ agent.id }}" href="{{ path('home_agent_liste_paiement', {id: agent.id}) }}"
                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                   paiements
                 </a>
