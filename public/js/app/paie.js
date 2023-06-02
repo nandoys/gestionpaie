@@ -143,3 +143,14 @@ paiement_pret_logement.change(setData)
 paiement_pret_frais_scolaire.change(setData)
 paiement_pret_deuil.change(setData)
 paiement_pret_autre.change(setData)
+
+
+
+// infinite scroll
+
+let ias = new InfiniteAjaxScroll('#offcanvasRight', {
+    item: '.list-group-item',
+    next: '.page-item:last-child .page-link',
+    pagination: '#pagination',
+    spinner: '.spinner-border',
+});

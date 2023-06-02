@@ -28,11 +28,11 @@ class Agent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('read:agent')]
+    #[Groups(['read:agent', 'read:paiements'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('read:agent')]
+    #[Groups(['read:agent', 'read:paiements'])]
     #[
         Assert\NotBlank(message:"Le nom est obligatoire"),
         Assert\Length(
@@ -43,7 +43,7 @@ class Agent
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('read:agent')]
+    #[Groups(['read:agent', 'read:paiements'])]
     #[
         Assert\NotBlank(message:"Le postnom est obligatoire"),
         Assert\Length(

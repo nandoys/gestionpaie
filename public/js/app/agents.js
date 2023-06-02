@@ -9,6 +9,7 @@ function delBtn(item, url){
     var id = item.dataset.id
 
     item.classList.add("disabled")
+    $(`#${item.id}`).html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Supprimer')
 
     var request = new XMLHttpRequest()
     
@@ -26,6 +27,7 @@ function delBtn(item, url){
             window.location.href = url
         }
         item.classList.remove("disabled")
+        $(`#${item.id}`).html('Supprimer')
     }
 
     request.send()

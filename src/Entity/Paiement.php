@@ -2,65 +2,92 @@
 
 namespace App\Entity;
 
-use App\Repository\PaiementRepository;
+use ApiPlatform\Metadata\Get;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\PaiementRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PaiementRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' =>['read:paiements']],
+        ),
+    ]
+)]
 class Paiement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $cnss = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $ipr = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $avanceSalaire = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('read:paiements')]
     private ?float $pretLogement = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $pretFraisScolaire = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $pretDeuil = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $pretAutre = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups('read:paiements')]
     private ?\DateTimeInterface $dateAt = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $base = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $primeDiplome = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $heureSupplementaire = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $transport = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $logement = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $allocationFamiliale = null;
 
     #[ORM\Column]
+    #[Groups('read:paiements')]
     private ?float $autres = null;
 
     #[ORM\ManyToOne(inversedBy: 'paiements')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('read:paiements')]
     private ?Agent $agent = null;
 
     public function __construct(Remuneration $remuneration, Indemnite $indemnite, Agent $agent)

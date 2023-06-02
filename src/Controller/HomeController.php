@@ -8,10 +8,11 @@ use App\Entity\Paiement;
 use App\Entity\Indemnite;
 use App\Form\PaiementType;
 use App\Entity\Remuneration;
+use App\Form\ImportFileType;
 use App\Form\AgentSalaireType;
 use App\Repository\AgentRepository;
-use App\Repository\IndemniteRepository;
 use App\Repository\PaiementRepository;
+use App\Repository\IndemniteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\RemunerationRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -38,10 +39,9 @@ class HomeController extends AbstractController
      IndemniteRepository $repoIndem,Agent $agent, PaginatorInterface $paginator) {
 
         // check the mode to handle modal form
-        $is_creating_agent = true;
+        $is_creating_agent = $agent->getId() === NULL;
 
-        if($agent->getId() !== NULL) { 
-            $is_creating_agent = false;
+        if(!$is_creating_agent) { 
 
             if ($agent->getRemuneration() === NULL) {
                 # code...
@@ -80,6 +80,8 @@ class HomeController extends AbstractController
             'indemnite'=>$indemnite
         ]);
 
+        $formFile = $this->createForm(ImportFileType::class);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -112,6 +114,7 @@ class HomeController extends AbstractController
 
         return  $this->render('home/agent.html.twig', [
             'form_agent_salaire'=>$form->createView(),
+            'form_file' => $formFile->createView(),
             'agents' => $agents,
             'is_creating_agent' => $is_creating_agent,
         ]);
@@ -144,13 +147,33 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/agent/{id}/paiement/{paiement_id}/delete', name: 'home_agent_paiment_delete')]
+    public function home_agent__paiment_delete( Agent $agent, Request $request, PaiementRepository $repoPaie){
+        $paiement_id = $request->attributes->get('paiement_id');
+
+        $paiement = $repoPaie->findOneBy(['id'=>$paiement_id,'agent' =>$agent]);
+
+        if($paiement->getId() !== NULL) {
+            $this->em->remove($paiement);
+            $this->em->flush();
+        }
+
+        return $this->redirectToRoute('home_agent_liste_paiement', ['id' => $agent->getId()]);
+    }
+
     #[Route('/agent/{id}/paie', name: 'home_agent_paiement')]
-    #[Route('/agent/{id}/paie/{paiement_id}', name: 'home_agent_paiement_update')]
-    public function agent_paiement(Agent $agent, Request $request, PaiementRepository $repoPaie) 
+    #[Route('/agent/{id}/paie/{paiement_id}/update', name: 'home_agent_paiement_update')]
+    public function agent_paiement(Agent $agent, PaginatorInterface $paginator, Request $request, PaiementRepository $repoPaie, AgentRepository $repoAgent) 
     {
         $paiement_id = $request->attributes->get('paiement_id');
         $paiement = $repoPaie->findOneBy(['id'=>$paiement_id,'agent' =>$agent]) ?? new Paiement($agent->getRemuneration(), $agent->getIndemnite(), $agent);
   
+        $agents = $paginator->paginate(
+            $repoAgent->findAll(), 
+            $request->query->getInt('page', 1),
+            5 /*limit per page*/
+        );
+        
         $form_paie = $this->createForm(PaiementType::class, $paiement);
 
         $form_paie->handleRequest($request);
@@ -167,6 +190,7 @@ class HomeController extends AbstractController
         return  $this->render('home/agent_paie.html.twig', [
             'form_paie' => $form_paie,
             'agent' => $agent,
+            'agents' => $agents,
             'paiement' => $paiement,
         ]);
     }
