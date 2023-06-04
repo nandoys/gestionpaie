@@ -39,6 +39,38 @@ class PaiementRepository extends ServiceEntityRepository
         }
     }
 
+    public function findPaymentsByDate($month, $agent, $paieId = 0) {
+        return $this->createQueryBuilder('p')
+                ->where('MONTH(p.dateAt) = :month')
+                ->andWhere('p.id != :id')
+                ->andWhere('p.agent = :agent')
+                ->setParameters(['agent' => $agent, 'month' => $month, 'id' => $paieId])
+                ->getQuery()
+                ->getResult();
+    }
+
+    /**
+     * -id: 17
+    -cnss: 0.0
+    -ipr: 0.0
+    -avanceSalaire: 60000.0
+    -pretLogement: 0.0
+    -pretFraisScolaire: 0.0
+    -pretDeuil: 0.0
+    -pretAutre: 0.0
+    -dateAt: DateTime @1685750400 {#2038 ▶}
+    -base: 200000.0
+    -primeDiplome: 10000.0
+    -heureSupplementaire: 0.0
+    -transport: 50000.0
+    -logement: 0.0
+    -allocationFamiliale: 0.0
+    -autres: 0.0
+    -agent: App\Entity\Agent {#922 ▶}
+    -abscence: 0.0
+    -deductionPrecedente: 0
+     */
+
 //    /**
 //     * @return Paiement[] Returns an array of Paiement objects
 //     */

@@ -90,6 +90,11 @@ class Paiement
     #[Groups('read:paiements')]
     private ?Agent $agent = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups('read:paiements')]
+    private ?float $abscence = null;
+    private int $deductionPrecedente = 0;
+
     public function __construct(Remuneration $remuneration, Indemnite $indemnite, Agent $agent)
     {
         // définir l'agent à payer
@@ -105,6 +110,16 @@ class Paiement
         $this->logement = $indemnite->getLogement();
         $this->allocationFamiliale = $indemnite->getAllocationFamiliale();
         $this->autres = $indemnite->getAutres();
+
+        // Déduction salariale
+        $this->cnss = 0;
+        $this->ipr = 0;
+        $this->avanceSalaire = 0;
+        $this->pretLogement = 0;
+        $this->pretFraisScolaire = 0;
+        $this->pretDeuil = 0;
+        $this->pretAutre = 0;
+        $this->abscence = 0;
 
         $this->dateAt = new \DateTime();
 
@@ -296,6 +311,34 @@ class Paiement
         return $this;
     }
 
+    public function getAbscence(): ?float
+    {
+        return $this->abscence;
+    }
+
+    public function setAbscence(?float $abscence): self
+    {
+        $this->abscence = $abscence;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeductionPrecedente(): int
+    {
+        return $this->deductionPrecedente;
+    }
+
+    /**
+     * @param int $deductionPrecedente
+     */
+    public function setDeductionPrecedente(int $deductionPrecedente): void
+    {
+        $this->deductionPrecedente = $deductionPrecedente;
+    }
+
     public function getAgent(): ?Agent
     {
         return $this->agent;
@@ -329,13 +372,15 @@ class Paiement
     public function calculDeduction() : ?float
     {
         $deductions = array($this->cnss, $this->ipr, $this->avanceSalaire, $this->pretLogement, $this->pretFraisScolaire, 
-        $this->pretDeuil, $this->pretAutre);
+        $this->pretDeuil, $this->pretAutre,  $this->abscence, $this->deductionPrecedente);
 
         return array_sum($deductions);
     }
 
     public function calculNetAPayer(): ?float
     {
+
         return $this->calculSalaireBrut() - $this->calculDeduction();
     }
+
 }

@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col">
-                                        <label for="paiement_base" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.base, 'Slaire de base') }}</label>
+                                        <label for="paiement_base" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.base, 'Salaire de base') }}</label>
                                         {{ form_widget(form_paie.base, {'attr': {'placeholder':"Montant salaire de base"}}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.base) }}
@@ -166,7 +166,7 @@
                                 <div class="row mb-2">
                                     <div class="col">
                                         <label for="npaiement_cnss" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.cnss) }}</label>
-                                        {{ form_widget(form_paie.cnss, {'attr': {'placeholder':"Montant CNSS"}}) }}
+                                        {{ form_widget(form_paie.cnss, {'attr': {'placeholder':"Montant CNSS", 'data-deducted': paiement.cnss } }) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.cnss) }}
                                         </div>
@@ -174,7 +174,7 @@
 
                                     <div class="col">
                                         <label for="paiement_ipr" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.ipr) }}</label>
-                                        {{ form_widget(form_paie.ipr, {'attr': {'placeholder':"Montant IPR"}}) }}
+                                        {{ form_widget(form_paie.ipr, {'attr': {'placeholder':"Montant IPR", 'data-deducted': paiement.ipr}}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.ipr) }}
                                         </div>
@@ -184,7 +184,7 @@
                                 <div class="row mb-2">
                                     <div class="col">
                                         <label for="paiement_avanceSalaire" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.avanceSalaire) }}</label>
-                                        {{ form_widget(form_paie.avanceSalaire, {'attr': {'placeholder':"Montant avance salaire"}}) }}
+                                        {{ form_widget(form_paie.avanceSalaire, {'attr': {'placeholder':"Montant avance salaire", 'data-deducted': paiement.avanceSalaire }}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.avanceSalaire) }}
                                         </div>
@@ -192,7 +192,7 @@
 
                                     <div class="col">
                                         <label for="paiement_pretLogement" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.pretLogement) }}</label>
-                                        {{ form_widget(form_paie.pretLogement, {'attr': {'placeholder':"Montant prêt logement"}}) }}
+                                        {{ form_widget(form_paie.pretLogement, {'attr': {'placeholder':"Montant prêt logement", 'data-deducted': paiement.pretLogement }}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.pretLogement) }}
                                         </div>
@@ -202,14 +202,14 @@
                                 <div class="row mb-2">
                                     <div class="col">
                                         <label for="paiement_pretFraisScolaire" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.pretFraisScolaire) }}</label>
-                                        {{ form_widget(form_paie.pretFraisScolaire, {'attr': {'placeholder':"Montant prêt frais scolaire"}}) }}
+                                        {{ form_widget(form_paie.pretFraisScolaire, {'attr': {'placeholder':"Montant prêt frais scolaire", 'data-deducted': paiement.pretFraisScolaire }}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.pretFraisScolaire) }}
                                         </div>
                                     </div>
                                     <div class="col">
                                         <label for="paiement_pretDeuil" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.pretDeuil) }}</label>
-                                        {{ form_widget(form_paie.pretDeuil, {'attr': {'placeholder':"Montant prêt deuil"}}) }}
+                                        {{ form_widget(form_paie.pretDeuil, {'attr': {'placeholder':"Montant prêt deuil", 'data-deducted': paiement.pretDeuil}}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.pretDeuil) }}
                                         </div>
@@ -219,13 +219,24 @@
                                 <div class="row mb-2">
                                     <div class="col">
                                         <label for="paiement_pretAutre" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.pretAutre) }}</label>
-                                        {{ form_widget(form_paie.pretAutre, {'attr': {'placeholder':"Montant autres prêt"}}) }}
+                                        {{ form_widget(form_paie.pretAutre, {'attr': {'placeholder':"Montant autres prêt", 'data-deducted': paiement.pretAutre }}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.pretAutre) }}
                                         </div>
                                     </div>
+                                    <div class="col">
+                                        <label for="paiement_abscence" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.abscence) }}</label>
+                                        {{ form_widget(form_paie.abscence, {'attr': {'placeholder':"Montant abscence", 'data-deducted': paiement.abscence}}) }}
+                                        <div class="invalid-feedback">
+                                            {{ form_errors(form_paie.abscence) }}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row mb-2">
+                                    <div class="col">
+                                        <span class="h5 form-label col-form-label col-form-label-sm">Précedente déduction</span>
+                                        <h4 id="paiement_precedente_deduction" data-deduction="{{ paiement.calculDeduction }}">{{ paiement.calculDeduction | number_format }} FC</h4>
+                                    </div>
                                     <div class="col">
                                         <span class="h5 form-label col-form-label col-form-label-sm">Net à payer</span>
                                         <h4 id="paiement_net">{{ paiement.calculNetAPayer | number_format }} FC</h4>

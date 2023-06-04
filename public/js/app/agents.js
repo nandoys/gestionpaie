@@ -1,5 +1,7 @@
 const agentModal = document.getElementById('agentModal')
 
+const fonctionAgent = $('#agent_salaire_agent_fonction')
+
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -9,6 +11,7 @@ function delBtn(item, url){
     var id = item.dataset.id
 
     item.classList.add("disabled")
+
     $(`#${item.id}`).html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Supprimer')
 
     var request = new XMLHttpRequest()
@@ -52,5 +55,13 @@ agentModal.addEventListener('hide.bs.modal', event => {
 
         window.location.href = "/agent"
     }
+})
+
+// remplir le salaire de base selon le choix de la fonction
+fonctionAgent.change((item) => {
+    const id = fonctionAgent.val()
+    $.get(`${window.origin}/api/fonctions/${id}`).then((data) => {
+        $('#agent_salaire_remuneration_base').val(data.baseSalarial)
+    })
 })
 

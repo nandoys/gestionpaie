@@ -32,7 +32,7 @@
                                             
                                             <div class="row mb-2">
                                                 <div class="col">
-                                                    <label for="nom" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_fonction.titre) }}</label>
+                                                    <label for="fonction_titre" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_fonction.titre) }}</label>
                                                     {{ form_widget(form_fonction.titre, {'attr': {'placeholder':"Tire de la fonction"}}) }}
                                                     <div class="invalid-feedback">
                                                         {{ form_errors(form_fonction.titre) }}
@@ -41,7 +41,7 @@
                                             </div>
                                             <div class="row mb-2">
                                                 <div class="col">
-                                                    <label for="nom" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_fonction.baseSalarial) }}</label>
+                                                    <label for="fonction_baseSalarial" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_fonction.baseSalarial) }}</label>
                                                     {{ form_widget(form_fonction.baseSalarial, {'attr': {'placeholder':"Salaire de base de la fonction"}}) }}
                                                     <div class="invalid-feedback">
                                                         {{ form_errors(form_fonction.baseSalarial) }}

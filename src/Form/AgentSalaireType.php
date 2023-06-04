@@ -10,6 +10,7 @@ use App\Entity\Remuneration;
 use App\Form\RemunerationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AgentSalaireType extends AbstractType
@@ -26,6 +27,7 @@ class AgentSalaireType extends AbstractType
             ->add('indemnite', IndemniteType::class, [
                 'data_class'=>Indemnite::class
             ])
+
         ;
     }
 

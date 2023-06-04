@@ -12,13 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
-    private $hasher;
-    private $em;
-    public function __construct(UserPasswordHasherInterface $hasher, EntityManagerInterface $em)
-    {
-        $this->hasher = $hasher;
-        $this->em = $em;
-    }
+    public function __construct(private UserPasswordHasherInterface $hasher, private EntityManagerInterface $em) {}
 
     #[Route('/login', name: 'security_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -36,9 +30,6 @@ class SecurityController extends AbstractController
 
        $this->em->flush();
        */
-        
-
-
 
        // last username entered by the user
        $lastUsername = $authenticationUtils->getLastUsername();

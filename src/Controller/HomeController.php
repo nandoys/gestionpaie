@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Agent;
-use App\Form\AgentType;
 use App\Entity\Paiement;
 use App\Entity\Indemnite;
 use App\Form\PaiementType;
@@ -13,9 +12,14 @@ use App\Form\AgentSalaireType;
 use App\Repository\AgentRepository;
 use App\Repository\PaiementRepository;
 use App\Repository\IndemniteRepository;
+use App\Service\ImportAgent;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\RemunerationRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,10 +37,15 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig');
     }
 
+    /**
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     #[Route('/agent', name: 'home_agent')]
     #[Route('/agent/{id}/update', name: 'home_agent_update')]
     public function agent(Request $request, AgentRepository $repoAgent, RemunerationRepository $repoRemuneration,
-     IndemniteRepository $repoIndem,Agent $agent, PaginatorInterface $paginator) {
+     IndemniteRepository $repoIndem,Agent $agent, PaginatorInterface $paginator, ContainerInterface $container, Xlsx $reader, Filesystem $filesystem) : Response
+    {
 
         // check the mode to handle modal form
         $is_creating_agent = $agent->getId() === NULL;
@@ -80,9 +89,21 @@ class HomeController extends AbstractController
             'indemnite'=>$indemnite
         ]);
 
-        $formFile = $this->createForm(ImportFileType::class);
+        $formUpload = $this->createForm(ImportFileType::class);
 
+        //dd($formUpload->getData());
         $form->handleRequest($request);
+
+        $formUpload->handleRequest($request);
+
+        if ($formUpload->isSubmitted()) {
+            $file = $formUpload->getData()['fichier'];
+
+            $import = new ImportAgent($file, $container, $reader, $filesystem);
+
+            $import->load();
+
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -114,7 +135,7 @@ class HomeController extends AbstractController
 
         return  $this->render('home/agent.html.twig', [
             'form_agent_salaire'=>$form->createView(),
-            'form_file' => $formFile->createView(),
+            'form_upload' => $formUpload->createView(),
             'agents' => $agents,
             'is_creating_agent' => $is_creating_agent,
         ]);
@@ -156,6 +177,7 @@ class HomeController extends AbstractController
         if($paiement->getId() !== NULL) {
             $this->em->remove($paiement);
             $this->em->flush();
+            $this->addFlash('success', "Votre suppression s'est bien effectuée.");
         }
 
         return $this->redirectToRoute('home_agent_liste_paiement', ['id' => $agent->getId()]);
@@ -169,12 +191,14 @@ class HomeController extends AbstractController
         $paiement = $repoPaie->findOneBy(['id'=>$paiement_id,'agent' =>$agent]) ?? new Paiement($agent->getRemuneration(), $agent->getIndemnite(), $agent);
   
         $agents = $paginator->paginate(
-            $repoAgent->findAll(), 
+            $repoAgent->findAll(),
             $request->query->getInt('page', 1),
             5 /*limit per page*/
         );
-        
+
         $form_paie = $this->createForm(PaiementType::class, $paiement);
+        //dd($paiement->calculSalaireBrut(), $paiement->calculDeduction(), $paiement->calculNetAPayer());
+
 
         $form_paie->handleRequest($request);
 
@@ -182,6 +206,8 @@ class HomeController extends AbstractController
             
             if ($paiement->getId() === NULL ) {
                 $this->em->persist($paiement);
+                //$this->addFlash('success', "Vous venez d'ajouter un nouveau paiment.");
+                //$this->redirectToRoute('home_agent_liste_paiement', ['id' => $agent->getId()]);
             }
             
             $this->em->flush();

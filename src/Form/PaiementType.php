@@ -11,6 +11,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PaiementType extends AbstractType
 {
+    public function __construct(
+        private PaieEventSubscriber $subscriber,
+    ) {
+    }
+
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -22,17 +27,32 @@ class PaiementType extends AbstractType
             ->add('pretFraisScolaire')
             ->add('pretDeuil')
             ->add('pretAutre')
+            ->add('abscence')
             ->add('dateAt', null, [
                 'widget' => 'single_text'
             ])
-            ->add('base')
-            ->add('primeDiplome')
-            ->add('heureSupplementaire')
-            ->add('transport')
-            ->add('logement')
-            ->add('allocationFamiliale')
-            ->add('autres')
-            ->addEventSubscriber(new PaieEventSubscriber())
+            ->add('base', null, [
+                'disabled' => true
+            ])
+            ->add('primeDiplome', null, [
+                'disabled' => true
+            ])
+            ->add('heureSupplementaire', null, [
+                'disabled' => true
+            ])
+            ->add('transport', null, [
+                'disabled' => true
+            ])
+            ->add('logement', null, [
+                'disabled' => true
+            ])
+            ->add('allocationFamiliale', null, [
+                'disabled' => true
+            ])
+            ->add('autres', null, [
+                'disabled' => true
+            ])
+            ->addEventSubscriber($this->subscriber)
         ;
     }
 

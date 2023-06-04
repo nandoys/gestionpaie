@@ -21,6 +21,9 @@ class Diplome
     #[ORM\OneToMany(mappedBy: 'diplome', targetEntity: Agent::class)]
     private Collection $agent;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $primeDiplome = null;
+
     public function __construct()
     {
         $this->agent = new ArrayCollection();
@@ -69,6 +72,18 @@ class Diplome
                 $agent->setDiplome(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrimeDiplome(): ?float
+    {
+        return $this->primeDiplome;
+    }
+
+    public function setPrimeDiplome(?float $primeDiplome): self
+    {
+        $this->primeDiplome = $primeDiplome;
 
         return $this;
     }

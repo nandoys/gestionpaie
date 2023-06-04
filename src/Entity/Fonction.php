@@ -25,7 +25,7 @@ class Fonction
     #[
         ORM\Column(length: 255),
         NotBlank(message: "Le titre est obligatoire"),
-        Length(min: 3, minMessage: "Le titre doit être d'au moins 3 caractères")
+        Length(min: 2, minMessage: "Le titre doit être d'au moins 2 caractères")
     ]
     private ?string $titre = null;
 

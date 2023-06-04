@@ -1,43 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Connexion{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+            <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+        {% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+            <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+            <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
+            <script src="{{ asset('js/infinite-ajax-scroll.min.js') }}"></script>
+        {% endblock %}
 
+        <style>
+            html,
+            body {
+                height: 100%;
+            }
 
-{% block title %}Connexion{% endblock %}
+            .form-signin {
+                max-width: 330px;
+                padding: 1rem;
+            }
 
-{% block body %}
+            .form-signin .form-floating:focus-within {
+                z-index: 2;
+            }
 
+            .form-signin input[type="email"] {
+                margin-bottom: -1px;
+                border-bottom-right-radius: 0;
+                border-bottom-left-radius: 0;
+            }
 
-<div class="container">
+            .form-signin input[type="password"] {
+                margin-bottom: 10px;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
 
-    <form action="{{ path('security_login') }}" method="post">
-    <img class="mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-    
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-    
-    <h1 class="h3 mb-3 fw-normal">Se connecter</h1>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
 
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
 
-    <div class="form-floating">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-    </div>
+        </style>
+    </head>
+    <body class="d-flex align-items-center py-4 bg-body-tertiary" cz-shortcut-listen="true">
+        {% block body %}
 
-    <div class="form-floating">
-      <input type="text" class="form-control" id="username" name="_username" placeholder="Gamaliel">
-      <label for="username">Nom d'utilisateur</label>
-    </div>
+            <main class="form-signin w-100 m-auto">
+                <form action="{{ path('security_login') }}" method="post">
+                    <img class="mb-4" src="{{ asset('image/trust comp2.png') }}" alt="" width="300" height="70">
 
-    <div class="form-floating">
-      <input type="password" class="form-control" id="password" name="_password" placeholder="Mot de passe">
-      <label for="password">Mot de passe</label>
-    </div>
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
 
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Se souvenir de moi
-      </label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Se connecter</button>
-    <p class="mt-5 mb-3 text-body-secondary">© 2023</p>
-  </form>
-</div>
-{% endblock %}
+                    <h1 class="h3 mb-3 fw-normal">Se connecter</h1>
+
+                    <div class="form-floating">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    </div>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="username" name="_username" placeholder="Nom d'utilisateur">
+                        <label for="floatingInput">Votre nom d'utilisateur</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control"  id="password" name="_password" placeholder="Mot de passe">
+                        <label for="floatingPassword">Votre mot de passe</label>
+                    </div>
+
+                    <div class="form-check text-start my-3">
+                        <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Se souvenir de moi
+                        </label>
+                    </div>
+                    <button class="btn btn-primary w-100 py-2" type="submit">Se connecter</button>
+                    <p class="mt-5 mb-3 text-body-secondary text-center">© Trust Holding 2023</p>
+                </form>
+            </main>
+        {% endblock %}
+    </body>
+</html>

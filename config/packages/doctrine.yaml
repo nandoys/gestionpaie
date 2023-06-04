@@ -16,7 +16,28 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
-
+        dql:
+            datetime_functions:
+                second: DoctrineExtensions\Query\Sqlite\Second
+                minute: DoctrineExtensions\Query\Sqlite\Minute
+                hour: DoctrineExtensions\Query\Sqlite\Hour
+                day: DoctrineExtensions\Query\Sqlite\Day
+                dayname: DoctrineExtensions\Query\Sqlite\DayName
+                #monthname: DoctrineExtensions\Query\Sqlite\MonthName
+                month: DoctrineExtensions\Query\Sqlite\Month
+                week: DoctrineExtensions\Query\Sqlite\Week
+                weekday: DoctrineExtensions\Query\Sqlite\WeekDay
+                year: DoctrineExtensions\Query\Sqlite\Year
+                date: DoctrineExtensions\Query\Sqlite\Date
+                date_format: DoctrineExtensions\Query\Sqlite\DateFormat
+                dateadd: DoctrineExtensions\Query\Sqlite\DateAdd
+                datediff: DoctrineExtensions\Query\Sqlite\DateDiff
+                julianday: DoctrineExtensions\Query\Sqlite\JulianDay
+                strftime: DoctrineExtensions\Query\Sqlite\StrfTime
+                #strtodate: DoctrineExtensions\Query\Sqlite\StrToDate
+                #time: DoctrineExtensions\Query\Sqlite\Time
+                #timestampadd: DoctrineExtensions\Query\Sqlite\TimestampAdd
+                #timestampdiff: DoctrineExtensions\Query\Sqlite\TimestampDiff
 when@test:
     doctrine:
         dbal:

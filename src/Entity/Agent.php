@@ -131,10 +131,6 @@ class Agent
     #[ORM\JoinColumn(nullable: false)]
     private ?EtatCivil $etatCivil = null;
 
-    #[ORM\ManyToOne(inversedBy: 'agent')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Nationalite $nationalite = null;
-
     #[ORM\OneToOne(mappedBy: 'agent', cascade: ['persist', 'remove'])]
     private ?Remuneration $remuneration = null;
 
@@ -144,9 +140,17 @@ class Agent
     #[ORM\OneToMany(mappedBy: 'agent', targetEntity: Paiement::class, orphanRemoval: true)]
     private Collection $paiements;
 
+    #[ORM\OneToMany(mappedBy: 'agent', targetEntity: PretAgent::class, orphanRemoval: true)]
+    private Collection $pretsAgent;
+
+    #[ORM\OneToMany(mappedBy: 'agent', targetEntity: AvanceSalaire::class, orphanRemoval: true)]
+    private Collection $avanceSalaires;
+
     public function __construct()
     {
         $this->paiements = new ArrayCollection();
+        $this->pretAgents = new ArrayCollection();
+        $this->avanceSalaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,18 +334,6 @@ class Agent
         return $this;
     }
 
-    public function getNationalite(): ?Nationalite
-    {
-        return $this->nationalite;
-    }
-
-    public function setNationalite(?Nationalite $nationalite): self
-    {
-        $this->nationalite = $nationalite;
-
-        return $this;
-    }
-
     public function getRemuneration(): ?Remuneration
     {
         return $this->remuneration;
@@ -423,4 +415,65 @@ class Agent
             return "en cours";
         }
     }
+
+    /**
+     * @return Collection<int, PretAgent>
+     */
+    public function getPretAgents(): Collection
+    {
+        return $this->pretAgents;
+    }
+
+    public function addPretAgent(PretAgent $pretAgent): self
+    {
+        if (!$this->pretsAgent->contains($pretAgent)) {
+            $this->pretsAgent->add($pretAgent);
+            $pretAgent->setAgent($this);
+        }
+
+        return $this;
+    }
+
+    public function removePretAgent(PretAgent $pretAgent): self
+    {
+        if ($this->pretsAgent->removeElement($pretAgent)) {
+            // set the owning side to null (unless already changed)
+            if ($pretAgent->getAgent() === $this) {
+                $pretAgent->setAgent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AvanceSalaire>
+     */
+    public function getAvanceSalaires(): Collection
+    {
+        return $this->avanceSalaires;
+    }
+
+    public function addAvanceSalaire(AvanceSalaire $avanceSalaire): self
+    {
+        if (!$this->avanceSalaires->contains($avanceSalaire)) {
+            $this->avanceSalaires->add($avanceSalaire);
+            $avanceSalaire->setAgent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvanceSalaire(AvanceSalaire $avanceSalaire): self
+    {
+        if ($this->avanceSalaires->removeElement($avanceSalaire)) {
+            // set the owning side to null (unless already changed)
+            if ($avanceSalaire->getAgent() === $this) {
+                $avanceSalaire->setAgent(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

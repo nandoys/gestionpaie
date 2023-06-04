@@ -7,6 +7,7 @@ use App\Entity\Diplome;
 use App\Entity\Fonction;
 use App\Entity\EtatCivil;
 use App\Entity\Nationalite;
+use App\Repository\FonctionRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -51,17 +52,16 @@ class AgentType extends AbstractType
             ->add('fonction', EntityType::class, [
                 'class'=>Fonction::class,
                 'choice_label' => 'titre',
+                'query_builder' => function (FonctionRepository $repo) {
+                    return $repo->createQueryBuilder('f')
+                        ->orderBy('f.titre', 'ASC');
+                },
                 'placeholder' => "Choisir une fonction"
             ])
             ->add('diplome', EntityType::class, [
                 'class'=>Diplome::class,
                 'choice_label' => 'titre',
                 'placeholder' => "Choisir le niveau d'étude"
-            ])
-            ->add('nationalite', EntityType::class, [
-                'class'=>Nationalite::class,
-                'choice_label' => 'titre',
-                'placeholder' => "Choisir nationalité"
             ])
         ;
     }

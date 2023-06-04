@@ -1,0 +1,134 @@
+<?php //App_Entity_Paiement
+
+return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Serializer\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\ClassMetadata')),
+        clone ($p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata')),
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+    ],
+    null,
+    [
+        'stdClass' => [
+            'name' => [
+                'App\\Entity\\Paiement',
+                'id',
+                'cnss',
+                'ipr',
+                'avanceSalaire',
+                'pretLogement',
+                'pretFraisScolaire',
+                'pretDeuil',
+                'pretAutre',
+                'dateAt',
+                'base',
+                'primeDiplome',
+                'heureSupplementaire',
+                'transport',
+                'logement',
+                'allocationFamiliale',
+                'autres',
+                'agent',
+                'abscence',
+                'deductionPrecedente',
+            ],
+            'attributesMetadata' => [
+                [
+                    'id' => $o[1],
+                    'cnss' => $o[2],
+                    'ipr' => $o[3],
+                    'avanceSalaire' => $o[4],
+                    'pretLogement' => $o[5],
+                    'pretFraisScolaire' => $o[6],
+                    'pretDeuil' => $o[7],
+                    'pretAutre' => $o[8],
+                    'dateAt' => $o[9],
+                    'base' => $o[10],
+                    'primeDiplome' => $o[11],
+                    'heureSupplementaire' => $o[12],
+                    'transport' => $o[13],
+                    'logement' => $o[14],
+                    'allocationFamiliale' => $o[15],
+                    'autres' => $o[16],
+                    'agent' => $o[17],
+                    'abscence' => $o[18],
+                    'deductionPrecedente' => $o[19],
+                ],
+            ],
+            'groups' => [
+                1 => [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+                [
+                    'read:paiements',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+); }];
