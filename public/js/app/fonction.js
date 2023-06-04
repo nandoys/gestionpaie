@@ -46,7 +46,7 @@ if (window.location.pathname.match("^/configuration/fonction/[0-9]/update$")) {
 fonctionModal.addEventListener('hide.bs.modal', event => {
 
     if (window.location.pathname.match("^/configuration/fonction/[0-9]/update$")) {
-        const url = "/configuration"+window.location.search
+        const url = "/configuration/fonction"+window.location.search
 
         window.location.href = url
     }

@@ -1,4 +1,4 @@
-{% extends '../../base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Configuration{% endblock %}
 
@@ -33,7 +33,7 @@
                                             <div class="row mb-2">
                                                 <div class="col">
                                                     <label for="fonction_titre" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_fonction.titre) }}</label>
-                                                    {{ form_widget(form_fonction.titre, {'attr': {'placeholder':"Tire de la fonction"}}) }}
+                                                    {{ form_widget(form_fonction.titre, {'attr': {'placeholder':"Titre de la fonction"}}) }}
                                                     <div class="invalid-feedback">
                                                         {{ form_errors(form_fonction.titre) }}
                                                     </div>
@@ -89,14 +89,12 @@
                     <td>
                         
                         {% if page_param == null %}
-                        <a class="btn btn-primary btn-sm update-agent"  data-id="{{ fonction.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                        <a class="btn btn-primary btn-sm update-fonction"  data-id="{{ fonction.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                         onclick="updateBtn(this, '{{ path('app_configuration_fonction_update', {'id':fonction.id }) }}')">Modifier<a>
                         {% else %}
-                        <a class="btn btn-primary btn-sm update-agent"  data-id="{{ fonction.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                        <a class="btn btn-primary btn-sm update-fonction"  data-id="{{ fonction.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                         onclick="updateBtn(this, '{{ path('app_configuration_fonction_update', {'id':fonction.id, 'page':page_param}) }}')">Modifier<a>
                         {% endif %}
-                        <a class="btn btn-danger btn-sm delete-agent" data-id="{{ fonction.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
-                        onclick="delBtn(this, '{{ path('app_configuration_fonction_delete', {'id':fonction.id }) }}')">Supprimer</a>
                     </td>
                     </tr>
                     {% endfor%}

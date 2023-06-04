@@ -50,10 +50,10 @@ class ConfigurationController extends AbstractController
         $fonctions = $paginator->paginate(
             $this->repoFonction->findAll(), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
-            5 /*limit per page*/
+            10 /*limit per page*/
         );
 
-        return $this->render('configuration/fonctions/index.html.twig', [
+        return $this->render('configuration/fonction.twig', [
             'fonctions' => $fonctions,
             'form_fonction' => $form_fonction->createView(),
             'is_creating_fonction' => $is_creating_fonction,
@@ -80,22 +80,13 @@ class ConfigurationController extends AbstractController
     {
         $page_param = $request->get('page');
 
-        // check the mode to handle modal form
-        $is_creating_diplome = $diplome->getId() === NULL;
-
         $form_diplome = $this->createForm(DiplomeType::class, $diplome);
 
         $form_diplome->handleRequest($request);
 
         if ($form_diplome->isSubmitted() && $form_diplome->isvalid()) {
 
-            if ($is_creating_diplome) {
-                $this->em->persist($diplome);
-
-                $this->addFlash('success', "Vous venez d'ajouter une nouvelle fonction {$diplome->getTitre()}");
-            } else {
-                $this->addFlash('success', "Vos modifications sur sur la fonction {$diplome->getTitre()} ont été enregistrées");
-            }
+            $this->addFlash('success', "Vos modifications sur sur la fonction {$diplome->getTitre()} ont été enregistrées");
 
             $this->em->flush();
 
@@ -105,13 +96,12 @@ class ConfigurationController extends AbstractController
         $diplomes = $paginator->paginate(
             $this->repoDiplome->findAll(), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
-            5 /*limit per page*/
+            10 /*limit per page*/
         );
 
-        return $this->render('configuration/fonctions/index.html.twig', [
+        return $this->render('configuration/diplome.twig', [
             'diplomes' => $diplomes,
             'form_diplome' => $form_diplome->createView(),
-            'is_creating_diplome' => $is_creating_diplome,
             'page_param' => $page_param
         ]);
     }
