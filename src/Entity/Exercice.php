@@ -33,6 +33,7 @@ class Exercice
 
     public function __construct()
     {
+        $this->estCloture = false;
         $this->pretsAgents = new ArrayCollection();
         $this->avanceSalaires = new ArrayCollection();
     }

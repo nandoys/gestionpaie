@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Diplome;
+use App\Entity\Exercice;
 use App\Entity\Fonction;
 use App\Form\DiplomeType;
+use App\Form\ExerciceType;
 use App\Form\FonctionType;
 use App\Repository\DiplomeRepository;
+use App\Repository\ExerciceRepository;
 use App\Repository\FonctionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -18,7 +21,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ConfigurationController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em, private FonctionRepository $repoFonction, private DiplomeRepository $repoDiplome)
+    public function __construct(private EntityManagerInterface $em, private FonctionRepository $repoFonction,
+                                private DiplomeRepository $repoDiplome, private ExerciceRepository $repoExercice)
     {}
 
     #[Route('/configuration/fonction', name: 'app_configuration_fonction')]
@@ -32,6 +36,8 @@ class ConfigurationController extends AbstractController
 
         $form_fonction = $this->createForm(FonctionType::class, $fonction);
 
+        $form_fonction->handleRequest($request);
+
         if ($form_fonction->isSubmitted() && $form_fonction->isvalid()) {
 
             if ($is_creating_fonction) {
@@ -39,7 +45,7 @@ class ConfigurationController extends AbstractController
 
                 $this->addFlash('success', "Vous venez d'ajouter une nouvelle fonction {$fonction->getTitre()}");
             } else {
-                $this->addFlash('success', "Vos modifications sur sur la fonction {$fonction->getTitre()} ont été enregistrées");
+                $this->addFlash('success', "Vos modifications sur la fonction {$fonction->getTitre()} ont été enregistrées");
             }
 
             $this->em->flush();
@@ -72,7 +78,6 @@ class ConfigurationController extends AbstractController
 
         return $this->redirectToRoute('app_configuration_fonction');
     }
-
 
     #[Route('/configuration/diplome', name: 'app_configuration_diplome')]
     #[Route('/configuration/diplome/{id}/update', name: 'app_configuration_diplome_update')]
@@ -108,6 +113,62 @@ class ConfigurationController extends AbstractController
 
     #[Route('/configuration/diplome/{id}.delete', name: 'app_configuration_diplome_delete')]
     public function delete_diplome(Fonction $fonction): RedirectResponse
+    {
+
+        if ($fonction->getId() !== NULL) {
+            $this->em->remove($fonction);
+            $this->em->flush();
+        }
+
+        return $this->redirectToRoute('app_configuration');
+    }
+
+
+    #[Route('/configuration/exercice', name: 'app_configuration_exercice')]
+    #[Route('/configuration/exercice/{id}/update', name: 'app_configuration_exercice_update')]
+    public function index_exercice(PaginatorInterface $paginator, Request $request, Exercice $exercice): Response
+    {
+        $page_param = $request->get('page');
+
+        // check the mode to handle modal form
+        $is_creating_exercice = $exercice->getId() === NULL;
+
+        $form_exercice = $this->createForm(ExerciceType::class, $exercice);
+
+        $form_exercice->handleRequest($request);
+
+        if ($form_exercice->isSubmitted() && $form_exercice->isvalid()) {
+
+            if ($is_creating_exercice) {
+                $this->em->persist($exercice);
+
+
+                $this->addFlash('success', "Vous venez d'ajouter un nouveau exercice");
+            } else {
+                $this->addFlash('success', "Vos modifications ont été enregistrées");
+            }
+
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_configuration_exercice', $page_param === NULL ? [] : ['page' => $page_param]);
+        }
+
+        $exercices = $paginator->paginate(
+            $this->repoExercice->findAll(), /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
+
+        return $this->render('configuration/exercice.twig', [
+            'exercices' => $exercices,
+            'form_exercice' => $form_exercice->createView(),
+            'is_creating_exercice' => $is_creating_exercice,
+            'page_param' => $page_param
+        ]);
+    }
+
+    #[Route('/configuration/diplome/{id}.delete', name: 'app_configuration_diplome_delete')]
+    public function delete_exercice(Fonction $fonction): RedirectResponse
     {
 
         if ($fonction->getId() !== NULL) {
