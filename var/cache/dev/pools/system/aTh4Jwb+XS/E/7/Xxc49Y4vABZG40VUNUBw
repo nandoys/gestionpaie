@@ -99,6 +99,10 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
                 [
                     'read:agent',
                 ],
+                22 => [
+                    'read:agent',
+                    'read:paiements',
+                ],
             ],
         ],
     ],

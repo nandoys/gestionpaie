@@ -49,11 +49,54 @@ if (window.location.pathname.match("^/agent/[0-9]/update$")) {
     new bootstrap.Modal(agentModal, {}).show()
 }
 
+const totalErreur = $('.invalid-feedback .d-block').length
+
+if (totalErreur > 0) {
+    let tabs = []
+    for (let i = 0; i < totalErreur; i++) {
+        const tab = $('.invalid-feedback .d-block')[i].parentElement.dataset.tab
+
+        if (tabs.find(tabExistant => tabExistant === tab) === undefined) {
+            tabs.push(tab)
+        }
+    }
+
+    tabs.forEach((tab, index) => {
+
+        $(`#${tab}`).addClass('text-danger')
+        if (index == 0 ) {
+            $('.nav-link').removeClass('active')
+            $('.tab-pane').removeClass('show active')
+
+            $(`#${tab}`).addClass('active text-white bg-danger')
+            $(`#${tab.replace('-tab','')}`).addClass('show active')
+        }
+    })
+
+    new bootstrap.Modal(agentModal, {}).show()
+
+    $('button[data-bs-toggle="pill"]').on('shown.bs.tab', (evt) => {
+
+        const tabCourant = $(`#${evt.target.id}`)
+        const tabPrecedent = $(`#${evt.relatedTarget.id}`)
+
+        if (tabs.find(tabExistant => tabExistant === evt.relatedTarget.id) !== undefined) {
+            tabPrecedent.addClass('text-danger').removeClass('text-white bg-danger')
+        }
+
+        if (tabs.find(tabExistant => tabExistant === evt.target.id) !== undefined) {
+            tabCourant.addClass('active text-white bg-danger')
+        }
+    })
+
+}
+
 agentModal.addEventListener('hide.bs.modal', event => {
 
-    if (window.location.pathname.match("^/agent/[0-9]/update$")) {
+    if (window.location.pathname.match("^/agent/[0-9]/update$") || totalErreur > 0) {
 
         window.location.href = "/agent"
+        console.log(('here'))
     }
 })
 
@@ -64,4 +107,3 @@ fonctionAgent.change((item) => {
         $('#agent_salaire_remuneration_base').val(data.baseSalarial)
     })
 })
-

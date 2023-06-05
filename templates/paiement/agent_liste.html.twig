@@ -11,7 +11,7 @@
       <div class="btn-toolbar mb-2 mb-md-0">
         {% if agent.statusContrat == "en cours" %}
         <div class="btn-group me-2">
-          <a href="{{ path('home_agent_paiement', {id: agent.id}) }}" class="btn btn-sm btn-outline-secondary">Nouvelle paie</a>
+          <a href="{{ path('paiement_agent', {id: agent.id}) }}" class="btn btn-sm btn-outline-secondary">Nouvelle paie</a>
 
           <button type="button" class="btn btn-sm btn-outline-secondary">Importer</button>
         </div>
@@ -59,10 +59,10 @@
                     <td>{{ paiement.calculNetAPayer | number_format }} FC</td>
                     <td>
                         <a class="btn btn-primary btn-sm update-agent" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
-                        href="{{ path('home_agent_paiement_update', {'id':agent.id, paiement_id: paiement.id }) }}">Modifier<a>
+                        href="{{ path('paiement_agent_update', {'id':agent.id, paiement_id: paiement.id }) }}">Modifier<a>
         
                         <a class="btn btn-danger btn-sm delete-agent" data-id="{{ paiement.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
-                        onclick="delBtn(this, '{{ path('home_agent_paiment_delete', {id: agent.id, paiement_id: paiement.id }) }}')" id="{{ paiement.id }}">Supprimer</a>
+                        onclick="delBtn(this, '{{ path('paiement_agent_delete', {id: agent.id, paiement_id: paiement.id }) }}')" id="{{ paiement.id }}">Supprimer</a>
                       </td>
                 </tr>
                 {%endfor%}

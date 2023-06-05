@@ -49,7 +49,7 @@
                                 <div class="col">
                                     <label for="agent_salaire_agent_nom" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.nom) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.nom, {'attr': {'placeholder':"Nom de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-perso-tab">
                                     {{ form_errors(form_agent_salaire.agent.nom) }}
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_postnom" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.postnom) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.postnom, {'attr': {'placeholder':"Postnom de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-perso-tab">
                                     {{ form_errors(form_agent_salaire.agent.postnom) }}
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_prenom" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.prenom) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.prenom, {'attr': {'placeholder':"Prénom de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-perso-tab">
                                     {{ form_errors(form_agent_salaire.agent.prenom) }}
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_sexe" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.sexe) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.sexe, {'attr': {'placeholder':"Sexe de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-perso-tab">
                                     {{ form_errors(form_agent_salaire.agent.sexe) }}
                                     </div>
                                 </div>
@@ -84,7 +84,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_etatCivil" class="h5 form-label col-sm-2 col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.etatCivil) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.etatCivil, {'attr': {'placeholder':"Etat civil de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-perso-tab">
                                     {{ form_errors(form_agent_salaire.agent.etatCivil) }}
                                     </div>
                                 </div>
@@ -94,7 +94,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_lieuNaissance" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.lieuNaissance) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.lieuNaissance, {'attr': {'placeholder':"Lieu de naissance de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-perso-tab">
                                     {{ form_errors(form_agent_salaire.agent.lieuNaissance) }}
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_dateNaissance" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.dateNaissance) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.dateNaissance, {'attr': {'placeholder':"Date de naissance de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-perso-tab">
                                     {{ form_errors(form_agent_salaire.agent.dateNaissance) }}
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_nombreEnfant" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.nombreEnfant) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.nombreEnfant, {'attr': {'placeholder':"Date de naissance de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-perso-tab">
                                     {{ form_errors(form_agent_salaire.agent.nombreEnfant) }}
                                     </div>
                                 </div>
@@ -124,7 +124,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_matricule" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.matricule) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.matricule, {'attr': {'placeholder':"Matricule de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-pro-tab">
                                     {{ form_errors(form_agent_salaire.agent.matricule) }}
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_numeroCnss" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.numeroCnss) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.numeroCnss, {'attr': {'placeholder':"Numéro CNSS de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-pro-tab">
                                     {{ form_errors(form_agent_salaire.agent.numeroCnss) }}
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_diplome" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.diplome) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.diplome, {'attr': {'placeholder':"Niveau d'études de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-pro-tab">
                                     {{ form_errors(form_agent_salaire.agent.diplome) }}
                                     </div>
                                 </div>
@@ -150,7 +150,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_fonction" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.fonction) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.fonction, {'attr': {'placeholder':"Fonction de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-pro-tab">
                                     {{ form_errors(form_agent_salaire.agent.fonction) }}
                                     </div>
                                 </div>
@@ -160,7 +160,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_debutContrat" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.debutContrat) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.debutContrat, {'attr': {'placeholder':"Lieu de naissance de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-pro-tab">
                                     {{ form_errors(form_agent_salaire.agent.debutContrat) }}
                                     </div>
                                 </div>
@@ -168,7 +168,7 @@
                                 <div class="col-6">
                                     <label for="agent_salaire_agent_finContrat" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.agent.finContrat) }}</label>
                                     {{ form_widget(form_agent_salaire.agent.finContrat, {'attr': {'placeholder':"Date de naissance de l'agent"}}) }}
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback" data-tab="v-pills-pro-tab">
                                     {{ form_errors(form_agent_salaire.agent.finContrat) }}
                                     </div>
                                 </div>
@@ -181,7 +181,7 @@
                               <div class="col-6">
                                   <label for="agent_salaire_remuneration_base" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.remuneration.base) }}</label>
                                   {{ form_widget(form_agent_salaire.remuneration.base, {'attr': {'placeholder':"Base salariale de l'agent"}}) }}
-                                  <div class="invalid-feedback">
+                                  <div class="invalid-feedback" data-tab="v-pills-salaire-tab">
                                   {{ form_errors(form_agent_salaire.remuneration.base) }}
                                   </div>
                               </div>
@@ -189,7 +189,7 @@
                               <div class="col-6">
                                   <label for="agent_salaire_remuneration_primeDiplome" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.remuneration.primeDiplome) }}</label>
                                   {{ form_widget(form_agent_salaire.remuneration.primeDiplome, {'attr': {'placeholder':"Prime diplôme de l'agent"}}) }}
-                                  <div class="invalid-feedback">
+                                  <div class="invalid-feedback" data-tab="v-pills-salaire-tab">
                                   {{ form_errors(form_agent_salaire.remuneration.primeDiplome) }}
                                   </div>
                               </div>
@@ -199,7 +199,7 @@
                               <div class="col-6">
                                   <label for="agent_salaire_remuneration_heureSupplementaire" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.remuneration.heureSupplementaire) }}</label>
                                   {{ form_widget(form_agent_salaire.remuneration.heureSupplementaire, {'attr': {'placeholder':"Heure supplémentaire de l'agent"}}) }}
-                                  <div class="invalid-feedback">
+                                  <div class="invalid-feedback" data-tab="v-pills-salaire-tab">
                                   {{ form_errors(form_agent_salaire.remuneration.heureSupplementaire) }}
                                   </div>
                               </div>
@@ -210,7 +210,7 @@
                               <div class="col-6">
                                   <label for="agent_salaire_indemnite_transport" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.indemnite.transport) }}</label>
                                   {{ form_widget(form_agent_salaire.indemnite.transport, {'attr': {'placeholder':"Transport de l'agent"}}) }}
-                                  <div class="invalid-feedback">
+                                  <div class="invalid-feedback" data-tab="v-pills-salaire-tab">
                                   {{ form_errors(form_agent_salaire.indemnite.transport) }}
                                   </div>
                               </div>
@@ -218,7 +218,7 @@
                               <div class="col-6">
                                   <label for="agent_salaire_indemnite_logement" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.indemnite.logement) }}</label>
                                   {{ form_widget(form_agent_salaire.indemnite.logement, {'attr': {'placeholder':"Logement de l'agent"}}) }}
-                                  <div class="invalid-feedback">
+                                  <div class="invalid-feedback" data-tab="v-pills-salaire-tab">
                                   {{ form_errors(form_agent_salaire.indemnite.logement) }}
                                   </div>
                               </div>
@@ -229,7 +229,7 @@
                               <div class="col-6">
                                   <label for="agent_salaire_indemnite_allocationFamiliale" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.indemnite.allocationFamiliale) }}</label>
                                   {{ form_widget(form_agent_salaire.indemnite.allocationFamiliale, {'attr': {'placeholder':"Allocation familiale de l'agent"}}) }}
-                                  <div class="invalid-feedback">
+                                  <div class="invalid-feedback" data-tab="v-pills-salaire-tab">
                                   {{ form_errors(form_agent_salaire.indemnite.allocationFamiliale) }}
                                   </div>
                               </div>
@@ -237,7 +237,7 @@
                               <div class="col-6">
                                   <label for="agent_salaire_indemnite_autres" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.indemnite.autres) }}</label>
                                   {{ form_widget(form_agent_salaire.indemnite.autres, {'attr': {'placeholder':"Autres indemnité de l'agent"}}) }}
-                                  <div class="invalid-feedback">
+                                  <div class="invalid-feedback" data-tab="v-pills-salaire-tab">
                                   {{ form_errors(form_agent_salaire.indemnite.autres) }}
                                   </div>
                               </div>
@@ -314,13 +314,13 @@
               <td>{{ agent.fonction.titre }}</td>
               <td>
                 <a class="btn btn-primary btn-sm update-agent"  data-id="{{ agent.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
-                onclick="updateBtn(this, '{{ path('home_agent_update', {'id':agent.id }) }}')">Modifier<a>
+                onclick="updateBtn(this, '{{ path('agent_update', {'id':agent.id }) }}')">Modifier<a>
 
                 <a class="btn btn-danger btn-sm delete-agent" id="{{ agent.id }}" data-id="{{ agent.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
-                onclick="delBtn(this, '{{ path('home_agent_delete', {'id':agent.id }) }}')">Supprimer</a>
+                onclick="delBtn(this, '{{ path('agent_delete', {'id':agent.id }) }}')">Supprimer</a>
               </td>
               <td>
-                <a class="btn btn-secondary btn-sm" data-id="{{ agent.id }}" href="{{ path('home_agent_liste_paiement', {id: agent.id}) }}"
+                <a class="btn btn-secondary btn-sm" data-id="{{ agent.id }}" href="{{ path('paiement_agent_liste', {id: agent.id}) }}"
                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                   paiements
                 </a>

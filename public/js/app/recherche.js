@@ -4,10 +4,29 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function rechercheAgent(nom) {
+    $.get(`${window.origin}/api/agents?nom=${nom}`).then(data => {
+        let lien_agents = []
+        if(data['hydra:totalItems'] > 0 && data['hydra:totalItems'] < 5) {
+            data['hydra:member'].forEach(agent => {
+                lien_agents.push(`
+                        <a class="list-group-item list-group-item-action border-bottom border-dark link-primary px-3 py-2" href="#">
+                            ${agent.nomComplet}
+                        </a>
+                    `)
+            })
+        }
+        else if(data['hydra:totalItems'] === 0) {
+            lien_agents = '<span>Aucun résultat ne correspond à votre recherche</span>'
+        }
+
+        $('#resultat-recherche').html(lien_agents)
+    })
+}
+
 recherche.keyup((evt) =>{
     if (recherche.val() !== '') {
-        var resultatRecherche = $('#resultat-recherche').html('' +
-            '<a class="list-group-item list-group-item-action border-bottom border-dark link-primary px-3 py-2" href="#"> list 1</a>')
+        rechercheAgent(recherche.val())
     } else {
         $('#resultat-recherche').html('')
     }
@@ -16,5 +35,11 @@ recherche.keyup((evt) =>{
 
 recherche.focusout((evt) => {
     $('#resultat-recherche').html('')
+})
+
+recherche.focusin((evt) => {
+    if (recherche.val() !== '') {
+        rechercheAgent(recherche.val())
+    }
 })
 

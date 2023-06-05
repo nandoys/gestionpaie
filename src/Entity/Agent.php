@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use App\ApiResource\Filters\AgentSearchName;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AgentRepository;
@@ -21,6 +21,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         ]
     )
 ]
+#[ApiFilter(AgentSearchName::class, properties: ['nom'])]
 #[
     UniqueEntity('matricule', message:"Ce numéro matricule {{ value }} existe déjà "),
     UniqueEntity('numeroCnss', message:"Ce numéro CNSS {{ value }} existe déjà ")
@@ -164,6 +165,7 @@ class Agent
         return "{$this->nom} {$this->postnom}";
     }
 
+    #[Groups(['read:agent', 'read:paiements'])]
     public function getNomComplet(){
         return "{$this->nom} {$this->postnom} {$this->prenom}";
     }

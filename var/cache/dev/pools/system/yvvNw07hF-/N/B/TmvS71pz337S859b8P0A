@@ -445,12 +445,24 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
                 10 => null,
             ],
             'filters' => [
-                2 => [],
-                4 => [],
-                [],
-                [],
-                8 => [],
-                10 => [],
+                2 => [
+                    'annotated_app_entity_agent_app_api_resource_filters_agent_search_name',
+                ],
+                4 => [
+                    'annotated_app_entity_agent_app_api_resource_filters_agent_search_name',
+                ],
+                [
+                    'annotated_app_entity_agent_app_api_resource_filters_agent_search_name',
+                ],
+                [
+                    'annotated_app_entity_agent_app_api_resource_filters_agent_search_name',
+                ],
+                8 => [
+                    'annotated_app_entity_agent_app_api_resource_filters_agent_search_name',
+                ],
+                10 => [
+                    'annotated_app_entity_agent_app_api_resource_filters_agent_search_name',
+                ],
             ],
             'validationContext' => [
                 2 => null,
