@@ -20,7 +20,7 @@
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
         <ol class="breadcrumb mt-3">
           <li class="breadcrumb-item"><a href="{{ path('paiement_agent_liste', {id: agent.id}) }}">Liste des paiements</a></li>
-          <li class="breadcrumb-item active" aria-current="page"> 
+          <li class="breadcrumb-item active" aria-current="page">
             {% if paiement.id == null %}
                 Nouveau paiement
             {% else %}
@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col">
-                                        <label for="paiement_base" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.base, 'Salaire de base') }}</label>
+                                        <label for="paiement_base" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_paie.base, 'Base salariale') }}</label>
                                         {{ form_widget(form_paie.base, {'attr': {'placeholder':"Montant salaire de base"}}) }}
                                         <div class="invalid-feedback">
                                             {{ form_errors(form_paie.base) }}

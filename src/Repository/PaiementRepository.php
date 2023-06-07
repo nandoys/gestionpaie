@@ -49,27 +49,52 @@ class PaiementRepository extends ServiceEntityRepository
                 ->getResult();
     }
 
-    /**
-     * -id: 17
-    -cnss: 0.0
-    -ipr: 0.0
-    -avanceSalaire: 60000.0
-    -pretLogement: 0.0
-    -pretFraisScolaire: 0.0
-    -pretDeuil: 0.0
-    -pretAutre: 0.0
-    -dateAt: DateTime @1685750400 {#2038 ▶}
-    -base: 200000.0
-    -primeDiplome: 10000.0
-    -heureSupplementaire: 0.0
-    -transport: 50000.0
-    -logement: 0.0
-    -allocationFamiliale: 0.0
-    -autres: 0.0
-    -agent: App\Entity\Agent {#922 ▶}
-    -abscence: 0.0
-    -deductionPrecedente: 0
-     */
+    public function findAnnualNetPaymentGroupByAgent($debutDate, $finDate) {
+        return $this->createQueryBuilder('p')
+            ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
+            SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
+            SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
+            SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
+            a.id AS agent_id, p.dateAt AS dateAt')
+            ->where('p.dateAt >= :debutDate')
+            ->andWhere('p.dateAt <= :finDate')
+            ->setParameters(compact('debutDate', 'finDate'))
+            ->groupBy('p.agent')
+            ->join('p.agent', 'a')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findQuarterNetPaymentGroupByAgent($debutMois, $debutAnnee, $finMois, $finAnnee) {
+        return $this->createQueryBuilder('p')
+            ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
+            SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
+            SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
+            SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
+            a.id AS agent_id')
+            ->where('MONTH(p.dateAt) >= :debutMois AND YEAR(p.dateAt) = :debutAnnee')
+            ->andWhere('MONTH(p.dateAt) <= :finMois AND YEAR(p.dateAt) = :finAnnee')
+            ->setParameters(compact('debutMois', 'debutAnnee', 'finMois', 'finAnnee'))
+            ->groupBy('p.agent')
+            ->join('p.agent', 'a')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findMonthNetPaymentGroupByAgent($month) {
+        return $this->createQueryBuilder('p')
+            ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
+            SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
+            SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
+            SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
+            a.id AS agent_id, p.dateAt AS dateAt')
+            ->where('MONTH(p.dateAt) = :month')
+            ->setParameters(compact('month'))
+            ->groupBy('p.agent')
+            ->join('p.agent', 'a')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Paiement[] Returns an array of Paiement objects

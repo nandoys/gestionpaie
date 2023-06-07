@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapports{% endblock %}
+
+{% block content %}
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2 position-relative">
+                Rapports
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar align-text-bottom" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    Cette année
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        {{ form_start(formFiltreMois) }}
+                            {{ form_widget(formFiltreMois) }}
+                        {{ form_end(formFiltreMois) }}
+                    </li>
+                    <li><a class="dropdown-item" href="{{ path('rapport_index') }}">Trimestriel</a></li>
+                    <li><a class="dropdown-item" href="{{ path('rapport_index') }}">Annuel</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Agent</th>
+                        <th scope="col">Salaire de base</th>
+                        <th scope="col">Indemnités</th>
+                        <th scope="col">Salaire brut</th>
+                        <th scope="col">Déduction</th>
+                        <th scope="col">Salaire Net</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                {% for paiement in paiements%}
+                    <tr class="tr-item">
+                        <td>{{ paiement.agent.nomComplet }}</td>
+                        <td>{{ paiement.calculBrutImposable | number_format }} FC</td>
+                        <td>{{ paiement.calculTotalIndemnite | number_format }} FC</td>
+                        <td>{{ paiement.calculSalaireBrut | number_format }} FC</td>
+                        <td>{{ paiement.calculDeduction | number_format }} FC</td>
+                        <td>{{ paiement.calculNetAPayer | number_format }} FC</td>
+                    </tr>
+                {%endfor%}
+                </tbody>
+            </table>
+            <div>
+                <nav aria-label="Page navigation">
+                    {{ knp_pagination_render(paiements) }}
+                </nav>
+            </div>
+            <div class="d-flex justify-content-center" id="spinner1">
+                <div class="spinner-grow text-primary" role="status" id="spinner">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        {% for paiementTrimestriel in paiementsTrimestriel %}
+            <table class="table table-striped table-sm table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Agent</th>
+                    <th scope="col">Salaire de base</th>
+                    <th scope="col">Indemnités</th>
+                    <th scope="col">Salaire brut</th>
+                    <th scope="col">Déduction</th>
+                    <th scope="col">Salaire Net</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for paiement in paiementTrimestriel %}
+                        <tr class="tr-item">
+                            <td>{{ paiement.agent.nomComplet }}</td>
+                            <td>{{ paiement.calculBrutImposable | number_format }} FC</td>
+                            <td>{{ paiement.calculTotalIndemnite | number_format }} FC</td>
+                            <td>{{ paiement.calculSalaireBrut | number_format }} FC</td>
+                            <td>{{ paiement.calculDeduction | number_format }} FC</td>
+                            <td>{{ paiement.calculNetAPayer | number_format }} FC</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    </main>
+
+{% endblock %}
+
+{% block extra_javascripts %}
+
+    <script src="{{ asset('js/bootstrap-datepicker.min.js') }}" ></script>
+    <script src="{{ asset('js/bootstrap-datepicker.fr.min.js') }}" ></script>
+    <script src="{{ asset('js/app/rapport.js') }}"></script>
+
+{% endblock %}

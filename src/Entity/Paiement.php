@@ -130,7 +130,6 @@ class Paiement
         return $this->id;
     }
 
-
     public function getCnss(): ?float
     {
         return $this->cnss;

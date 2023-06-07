@@ -67,8 +67,6 @@ class PaiementController extends AbstractController
         );
 
         $form_paie = $this->createForm(PaiementType::class, $paiement);
-        //dd($paiement->calculSalaireBrut(), $paiement->calculDeduction(), $paiement->calculNetAPayer());
-
 
         $form_paie->handleRequest($request);
 
@@ -91,4 +89,9 @@ class PaiementController extends AbstractController
         ]);
     }
 
+    #[Route('/bulletin', name: 'bulletin_paie_agent')]
+    public function bulletin_paie(): Response
+    {
+        return $this->render('paiement/bulletin_paie.twig');
+    }
 }

@@ -167,7 +167,7 @@ class Agent
 
     #[Groups(['read:agent', 'read:paiements'])]
     public function getNomComplet(){
-        return "{$this->nom} {$this->postnom} {$this->prenom}";
+        return ucfirst($this->nom) .' '. ucfirst($this->postnom) .' '. ucfirst($this->prenom);
     }
 
     public function getNom(): ?string
