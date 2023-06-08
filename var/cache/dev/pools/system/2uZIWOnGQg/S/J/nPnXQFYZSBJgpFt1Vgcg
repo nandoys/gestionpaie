@@ -10,10 +10,11 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
             'classes' => [
                 [
                     'App\\Entity\\Agent',
+                    'App\\Entity\\AvanceSalaire',
                     'App\\Entity\\Diplome',
-                    'App\\Entity\\Fiscalite',
                     'App\\Entity\\Fonction',
                     'App\\Entity\\Paiement',
+                    'App\\Entity\\PretAgent',
                 ],
             ],
         ],

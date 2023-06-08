@@ -1,0 +1,345 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiements{% endblock %}
+
+{% block content %}
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="container" data-url-agent-liste="{{ path('paiement_agent_liste', {id: agent.id}) }}">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2 position-relative">
+        Liste des paiements 
+      </h1>
+      <div class="btn-toolbar mb-2 mb-md-0">
+        {% if agent.statusContrat == "en cours" %}
+        <div class="btn-group me-2">
+          <a href="{{ path('paiement_agent', {id: agent.id}) }}" class="btn btn-sm btn-outline-secondary">Nouvelle paie</a>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#agentAvanceSalaireModal">Avance salaire</button>
+
+            <!-- Full screen modal avance salaire -->
+            <div class="modal fade" id="agentAvanceSalaireModal" tabindex="-1" aria-labelledby="agentAvanceSalaireModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-4" id="agentModalFullscreenXxlLabel">
+                                Avance sur salaire
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body  bg-light">
+                            <div class="d-flex align-items-start">
+                                <div class="col-8 me-2">
+                                    <div class="table-responsive">
+                                        {% for message in app.flashes('success-avance') %}
+                                            <div class="alert alert-success alert-dismissible" role="alert">{{ message }}</div>
+                                        {% endfor %}
+                                        <table class="table table-striped table-sm table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">{{ knp_pagination_sortable(avancesSalaire, 'Date de paiement', 'dateAt') }}</th>
+                                                    <th scope="col">Montant</th>
+                                                    <th scope="col">Mensualité</th>
+                                                    <th scope="col">Mois reglé</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for avance in avancesSalaire%}
+                                                <tr>
+                                                    <td>{{ avance.dateAt | date('d/m/Y') }}</td>
+                                                    <td>{{ avance.montant | number_format }} FC</td>
+                                                    <td>{{ avance.mensualite }}</td>
+                                                    <td>{{ avance.mensualitePaye | default('<span class="badge text-bg-info">Aucun</span>') | raw }}</td>
+                                                    <td>
+                                                        {% if avance.estCloture == false  %}
+                                                            {% if avance.mensualitePaye is null or avance.mensualitePaye == 0  %}
+                                                                <span class="badge text-bg-danger">Non payé</span>
+                                                            {% else %}
+                                                                <span class="badge text-bg-warning">Payé partiellement</span>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <span class="badge text-bg-success">Payé</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-primary btn-sm update-agent" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                                           href="{{ path('paiement_avance_salaire_agent_update', {id: avance.agent.id, avance_id: avance.id }) }}">Modifier<a>
+
+                                                        {% if avance.mensualitePaye is null or avance.mensualitePaye == 0  %}
+                                                                <a class="btn btn-danger btn-sm delete-avance" data-id="{{ avance.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                                                   onclick="delAvanceSalaireBtn(this, '{{ path('paiement_avance_salaire_agent_delete', {id: avance.agent.id, avance_id: avance.id }) }}')" id="{{ avance.id }}">Supprimer</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {%endfor%}
+                                            </tbody>
+                                        </table>
+                                        <div>
+                                            <nav aria-label="Page navigation">
+                                                {{ knp_pagination_render(avancesSalaire) }}
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="h5">
+                                        {% if is_creating_avance == true %}
+                                            Nouvelle avance salaire
+                                        {% else %}
+                                            Modifier avance salaire
+                                        {% endif %}
+                                    </div>
+                                    {{ form_start(form_avance) }}
+                                        {{ form_label(form_avance.dateAt, "Date de l'octroi") }}
+                                        {{ form_widget(form_avance.dateAt) }}
+                                        <div class="invalid-feedback error-avance mb-2">
+                                            {{ form_errors(form_avance.dateAt) }}
+                                        </div>
+
+                                        {{ form_label(form_avance.montant, null, {label_attr: {class: 'mt-2'} }) }}
+                                        {{ form_widget(form_avance.montant) }}
+                                        <div class="invalid-feedback error-avance mb-2">
+                                            {{ form_errors(form_avance.montant) }}
+                                        </div>
+
+                                        {{ form_label(form_avance.mensualite, 'Modalité mensuelle', {label_attr: {class: 'mt-2'} }) }}
+                                        {{ form_widget(form_avance.mensualite) }}
+                                        <div class="invalid-feedback error-avance mb-2">
+                                            {{ form_errors(form_avance.mensualite) }}
+                                        </div>
+
+                                        <div class="col d-grid gap-2 mt-3">
+                                            <button class="btn btn-success">
+                                                {% if is_creating_avance == true %}
+                                                    Enregistrer
+                                                {% else %}
+                                                    Modifier
+                                                {% endif %}
+                                            </button>
+                                        </div>
+                                    {{ form_end(form_avance) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#agentPretModal">Prêt</button>
+
+            <!-- Full screen modal prêt -->
+            <div class="modal fade" id="agentPretModal" tabindex="-1" aria-labelledby="agentPretModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-4" id="agentModalFullscreenXxlLabel">
+                                Prêt
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body  bg-light">
+                            <div class="d-flex align-items-start">
+                                <div class="col-8">
+                                    <div class="table-responsive">
+                                        {% for message in app.flashes('success-pret') %}
+                                            <div class="alert alert-success alert-dismissible" role="alert">{{ message }}</div>
+                                        {% endfor %}
+                                        <table class="table table-striped table-sm table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">{{ knp_pagination_sortable(prets, 'Date de paiement', 'dateAt') }}</th>
+                                                <th scope="col">Type de prêt</th>
+                                                <th scope="col">Montant</th>
+                                                <th scope="col">Mensualité</th>
+                                                <th scope="col">Mois reglé</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for pret in prets %}
+                                                <tr>
+                                                    <td>{{ pret.dateAt | date('d/m/Y') }}</td>
+                                                    <td>{{ pret.typePret }}</td>
+                                                    <td>{{ pret.montant | number_format }} FC</td>
+                                                    <td>{{ pret.mensualite }}</td>
+                                                    <td>{{ pret.mensualitePaye | default('<span class="badge text-bg-info">Aucun</span>') | raw }}</td>
+                                                    <td>
+                                                        {% if pret.estCloture == false  %}
+                                                            {% if pret.mensualitePaye is null or pret.mensualitePaye == 0  %}
+                                                                <span class="badge text-bg-danger">Non payé</span>
+                                                            {% else %}
+                                                                <span class="badge text-bg-warning">Payé partiellement</span>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <span class="badge text-bg-success">Payé</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-primary btn-sm update-agent" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                                           href="{{ path('paiement_pret_agent_update', {id: pret.agent.id, pret_id: pret.id }) }}">Modifier<a>
+
+                                                                {% if pret.mensualitePaye is null or pret.mensualitePaye == 0  %}
+                                                                    <a class="btn btn-danger btn-sm delete-pret" data-id="{{ pret.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                                                       onclick="delPretBtn(this, '{{ path('paiement_pret_agent_delete', {id: pret.agent.id, pret_id: pret.id }) }}')" id="{{ pret.id }}">Supprimer</a>
+                                                                {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {%endfor%}
+                                            </tbody>
+                                        </table>
+                                        <div>
+                                            <nav aria-label="Page navigation">
+                                                {{ knp_pagination_render(prets) }}
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="h5">
+                                        {% if is_creating_pret == true %}
+                                            Nouveau prêt
+                                        {% else %}
+                                            Modifier prêt
+                                        {% endif %}
+                                    </div>
+                                    {{ form_start(form_pret) }}
+                                    {{ form_label(form_pret.dateAt, "Date de l'octroi") }}
+                                    {{ form_widget(form_pret.dateAt) }}
+                                    <div class="invalid-feedback error-pret mb-2">
+                                        {{ form_errors(form_pret.dateAt) }}
+                                    </div>
+
+                                    {{ form_label(form_pret.montant, null, {label_attr: {class: 'mt-2'} }) }}
+                                    {{ form_widget(form_pret.montant) }}
+                                    <div class="invalid-feedback error-pret mb-2">
+                                        {{ form_errors(form_pret.montant) }}
+                                    </div>
+
+                                    {{ form_label(form_pret.mensualite, 'Modalité mensuelle', {label_attr: {class: 'mt-2'} }) }}
+                                    {{ form_widget(form_pret.mensualite) }}
+                                    <div class="invalid-feedback error-pret mb-2">
+                                        {{ form_errors(form_pret.mensualite) }}
+                                    </div>
+
+                                    {{ form_label(form_pret.typePret, 'Type de prêt', {label_attr: {class: 'mt-2'} }) }}
+                                    {{ form_widget(form_pret.typePret) }}
+                                    <div class="invalid-feedback error-pret mb-2">
+                                        {{ form_errors(form_pret.typePret) }}
+                                    </div>
+
+                                    <div class="col d-grid gap-2 mt-3">
+                                        <button class="btn btn-success">
+                                            {% if is_creating_pret == true %}
+                                                Enregistrer
+                                            {% else %}
+                                                Modifier
+                                            {% endif %}
+                                        </button>
+                                    </div>
+                                    {{ form_end(form_pret) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#importModal">Importer</button>
+
+            <!-- Modal importer -->
+            <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        {{ form_start(form_upload) }}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Importer les paiements existants</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {{ form_widget(form_upload) }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary">Uploader</button>
+                        </div>
+                        {{ form_end(form_upload) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar align-text-bottom" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          This week
+        </button>
+      </div>
+    </div>  
+
+    <div class="table-responsive">
+      {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible" role="alert">{{ message }}</div>
+      {% endfor %}
+        
+        <h5>Agent : {{ agent.nomComplet }}</h5>
+        <h6>Matricule : {{ agent.matricule }}</h6>  
+        <h6>N° CNSS : {{ agent.numeroCnss }}</h6>
+        <h6>Contrat : {{ agent.typeContrat }} {{ agent.statusContrat }}</h6>
+        {% if agent.typeContrat == "CDD" %}
+        <h6>Durée contrat : Du {{ agent.debutContrat | date('d/m/Y') }} au {{ agent.finContrat | date('d/m/Y') }}</h6>
+        {% endif%}
+
+        <table class="table table-striped table-sm table-hover">
+            <thead>
+              <tr>
+                <th scope="col">{{ knp_pagination_sortable(paiements, 'Date de paiement', 'dateAt') }}</th>
+                <th scope="col">Salaire de base</th>
+                <th scope="col">Indemnités</th>
+                <th scope="col">Salaire brut</th>
+                <th scope="col">Déduction</th>
+                <th scope="col">Salaire Net</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for paiement in paiements%}
+                <tr>
+                    <td>{{ paiement.dateAt | date('d/m/Y') }}</td>
+                    <td>{{ paiement.calculBrutImposable | number_format }} FC</td>
+                    <td>{{ paiement.calculTotalIndemnite | number_format }} FC</td>
+                    <td>{{ paiement.calculSalaireBrut | number_format }} FC</td>
+                    <td>{{ paiement.calculDeduction | number_format }} FC</td>
+                    <td>{{ paiement.calculNetAPayer | number_format }} FC</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm update-agent" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
+                        href="{{ path('paiement_agent_update', {'id':agent.id, paiement_id: paiement.id }) }}">Modifier<a>
+        
+                        <a class="btn btn-danger btn-sm delete-agent" data-id="{{ paiement.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
+                        onclick="delBtn(this, '{{ path('paiement_agent_delete', {id: agent.id, paiement_id: paiement.id }) }}')" id="{{ paiement.id }}">Supprimer</a>
+                      </td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+        <div>
+            <nav aria-label="Page navigation">
+               {{ knp_pagination_render(paiements) }}
+            </nav>
+        </div>
+    </div>
+  </main>
+
+{% endblock %}
+
+{% block extra_javascripts %}
+
+  <script src="{{ asset('js/app/paiements.js') }}"></script>
+
+{% endblock %}

@@ -2,11 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PretAgentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PretAgentRepository::class)]
+#[ApiResource]
+#[UniqueEntity(['dateAt', 'agent', 'typePret'], message: "Cet agent a déjà ce type de prêt pour la date du {{ value }}")]
 class PretAgent
 {
     #[ORM\Id]
@@ -15,12 +20,15 @@ class PretAgent
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\Positive(message:"Le montant doit être supérieur à zéro")]
     private ?float $montant = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\Positive(message:"La mensulaité doit être supérieur à zéro")]
     private ?int $mensualite = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Assert\LessThanOrEqual(propertyPath: "mensualite", message: "La mensualité payé doit être inférieure ou égale à la modalité mensuelle")]
     private ?int $mensualitePaye = null;
 
     #[ORM\ManyToOne(inversedBy: 'pretAgents')]
@@ -32,7 +40,13 @@ class PretAgent
     private ?Exercice $exercice = null;
 
     #[ORM\Column]
-    private ?bool $estCloture = null;
+    private ?bool $estCloture = false;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateAt = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $typePret = null;
 
     public function getId(): ?int
     {
@@ -107,6 +121,30 @@ class PretAgent
     public function setEstCloture(bool $estCloture): self
     {
         $this->estCloture = $estCloture;
+
+        return $this;
+    }
+
+    public function getDateAt(): ?\DateTimeInterface
+    {
+        return $this->dateAt;
+    }
+
+    public function setDateAt(\DateTimeInterface $dateAt): self
+    {
+        $this->dateAt = $dateAt;
+
+        return $this;
+    }
+
+    public function getTypePret(): ?string
+    {
+        return $this->typePret;
+    }
+
+    public function setTypePret(string $typePret): self
+    {
+        $this->typePret = $typePret;
 
         return $this;
     }

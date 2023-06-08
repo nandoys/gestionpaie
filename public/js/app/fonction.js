@@ -38,14 +38,14 @@ function updateBtn(item, url){
     window.location.href = url
 }
 
-if (window.location.pathname.match("^/configuration/fonction/[0-9]/update$")) {
+if (window.location.pathname.match("^/configuration/fonction/[0-9]+/update$")) {
 
     new bootstrap.Modal(fonctionModal, {}).show()
 }
 
 fonctionModal.addEventListener('hide.bs.modal', event => {
 
-    if (window.location.pathname.match("^/configuration/fonction/[0-9]/update$")) {
+    if (window.location.pathname.match("^/configuration/fonction/[0-9]+/update$")) {
         const url = "/configuration/fonction"+window.location.search
 
         window.location.href = url

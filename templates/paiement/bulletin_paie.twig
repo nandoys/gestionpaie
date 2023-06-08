@@ -1,0 +1,198 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bulletin de paie{% endblock %}
+
+{% block content %}
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2 position-relative">
+                Bulletin
+            </h1>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="col-5 bg-info">
+                    Information école
+            </div>
+            <div class="col-5 bg-success">
+                Date du paiement
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">FICHE DE PAIE</div>
+            <div class="col-12 text-center">MOIS ANNEE</div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="col-6 ps-0">
+                <div class="row">NOM & POSTNOM</div>
+                <div class="row">PRENOM</div>
+                <div class="row">SEXE</div>
+                <div class="row">ETAT CIVIL</div>
+                <div class="row">MATRICULE</div>
+                <div class="row">CONTRAT</div>
+            </div>
+            <div class="">
+                <div class="row">N° CNSS</div>
+                <div class="row">FONCTION</div>
+                <div class="row">ENGAGE(E) le</div>
+                <div class="row">ANCIENNETE</div>
+            </div>
+        </div>
+        <div class="d-print-flex d-flex justify-content-center">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="fs-6">
+                    <tr>
+                        <th scope="col" >RUBRIQUES</th>
+                        <th scope="col">TEMPS / BASE</th>
+                        <th scope="col">TAUX</th>
+                        <th scope="col">SALAIRE BRUT</th>
+                        <th scope="col">DEDUCTION</th>
+                        <th scope="col">SALAIRE NET</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SALAIRE DE BASE</td>
+                            <td>22</td>
+                            <td>2300</td>
+                            <td>20000</td>
+                            <td></td>
+                            <td ></td>
+                        </tr>
+                        <tr>
+                            <td>PRIME DIPLOME</td>
+                            <td></td>
+                            <td></td>
+                            <td>20000</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>HEURES SUPPLEMENTAIRES</td>
+                            <td>22</td>
+                            <td></td>
+                            <td>2000</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TRANSPORT</td>
+                            <td>22</td>
+                            <td></td>
+                            <td>20000</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>LOGEMENT</td>
+                            <td></td>
+                            <td></td>
+                            <td>20000</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>ALLOCATION FAMILIALE</td>
+                            <td></td>
+                            <td></td>
+                            <td>20000</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>AUTRES</td>
+                            <td></td>
+                            <td></td>
+                            <td>20000</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td>DEDUCTION INSS</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1000</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>DEDUCTION IPR</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1000</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>DEDUCTION AVANCE SALAIRE</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1000</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>DEDUCTION PRET LOGEMENT</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1000</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>DEDUCTION PRET FRAIS SCOLAIRE</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1000</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>DEDUCTION PRET DEUIL</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1000</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>DEDUCTION PRET AUTRES</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1000</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>DEDUCTION ABSCENCE</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1000</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td>TOTAL</td>
+                            <td></td>
+                            <td></td>
+                            <td>100 000</td>
+                            <td>100 000</td>
+                            <td>200 000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end me-5">
+                    {{ codebar | raw }}
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
+
+{% block extra_javascripts %}
+
+
+{% endblock %}

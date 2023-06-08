@@ -38,14 +38,14 @@ function updateBtn(item, url){
     window.location.href = url
 }
 
-if (window.location.pathname.match("^/configuration/exercice/[0-9]/update$")) {
+if (window.location.pathname.match("^/configuration/exercice/[0-9]+/update$")) {
 
     new bootstrap.Modal(exerciceModal, {}).show()
 }
 
 exerciceModal.addEventListener('hide.bs.modal', event => {
 
-    if (window.location.pathname.match("^/configuration/exercice/[0-9]/update$")) {
+    if (window.location.pathname.match("^/configuration/exercice/[0-9]+/update$")) {
         const url = "/configuration/exercice"+window.location.search
 
         window.location.href = url

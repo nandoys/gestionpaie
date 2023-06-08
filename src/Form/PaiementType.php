@@ -29,7 +29,8 @@ class PaiementType extends AbstractType
             ->add('pretAutre')
             ->add('abscence')
             ->add('dateAt', null, [
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'attr' => ['min' => $options['min'], 'max' =>$options['max']],
             ])
             ->add('base', null, [
                 'disabled' => true
@@ -60,6 +61,11 @@ class PaiementType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Paiement::class,
+        ]);
+
+        $resolver->setRequired([
+            'min',
+            'max',
         ]);
     }
 }

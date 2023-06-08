@@ -26,7 +26,7 @@ function delBtn(item, url){
         var prenom =json_data.prenom
 
             
-        if (confirm(`Voulez-vous supprimer cet agent ? \r ${capitalizeFirstLetter(nom)} ${capitalizeFirstLetter(postnom)} ${capitalizeFirstLetter(prenom)}`)) {
+        if (confirm(`Voulez-vous vraiment supprimer cet agent ? \r ${capitalizeFirstLetter(nom)} ${capitalizeFirstLetter(postnom)} ${capitalizeFirstLetter(prenom)}`)) {
             window.location.href = url
         }
         item.classList.remove("disabled")
@@ -44,7 +44,7 @@ function updateBtn(item, url, isCreatingAgent){
     window.location.href = url
 }
 
-if (window.location.pathname.match("^/agent/[0-9]/update$")) {
+if (window.location.pathname.match("^/agent/[0-9]+/update$")) {
 
     new bootstrap.Modal(agentModal, {}).show()
 }
@@ -93,10 +93,9 @@ if (totalErreur > 0) {
 
 agentModal.addEventListener('hide.bs.modal', event => {
 
-    if (window.location.pathname.match("^/agent/[0-9]/update$") || totalErreur > 0) {
+    if (window.location.pathname.match("^/agent/[0-9]+/update$") || totalErreur > 0) {
 
         window.location.href = "/agent"
-        console.log(('here'))
     }
 })
 
