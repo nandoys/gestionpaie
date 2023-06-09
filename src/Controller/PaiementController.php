@@ -308,9 +308,24 @@ class PaiementController extends AbstractController
         ]);
     }
 
-    #[Route('/bulletin', name: 'bulletin_paie_agent')]
-    public function bulletin_paie(): Response
+    #[Route('/bulletin', name: 'bulletin_paie')]
+    //#[Route('/bulletin/mois/{mois}/agent/{id}', name: 'bulletin_paie_agent')]
+    public function bulletin_paie(/*$mois, Agent $agent*/): Response
     {
+        //$bulletin = $this->repoPaie->findPaymentBill($mois, $agent);
+        //dump($bulletin);
+        $generator = new BarcodeGeneratorHTML();
+        $codebar = $generator->getBarcode('081231723897', $generator::TYPE_CODE_128);
+        return $this->render('paiement/bulletin_paie.twig', [
+            'codebar' =>  $codebar
+        ]);
+    }
+
+    #[Route('/bulletin/mois/{mois}/agent/{id}', name: 'bulletin_paie_agent')]
+    public function bulletin_paie_agent($mois, Agent $agent): Response
+    {
+        $bulletin = $this->repoPaie->findPaymentBill($mois, $agent);
+        dump($bulletin);
         $generator = new BarcodeGeneratorHTML();
         $codebar = $generator->getBarcode('081231723897', $generator::TYPE_CODE_128);
         return $this->render('paiement/bulletin_paie.twig', [

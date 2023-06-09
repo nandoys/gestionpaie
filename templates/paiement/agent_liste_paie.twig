@@ -316,6 +316,7 @@
                 <th scope="col">Salaire brut</th>
                 <th scope="col">Déduction</th>
                 <th scope="col">Salaire Net</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -333,7 +334,8 @@
         
                         <a class="btn btn-danger btn-sm delete-agent" data-id="{{ paiement.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" 
                         onclick="delBtn(this, '{{ path('paiement_agent_delete', {id: agent.id, paiement_id: paiement.id }) }}')" id="{{ paiement.id }}">Supprimer</a>
-                      </td>
+                    </td>
+
                 </tr>
                 {%endfor%}
             </tbody>

@@ -50,7 +50,14 @@ class RapportController extends AbstractController
 
             $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
-            $paiementsTrimestriel[] = $paiements->getDenormalizedData();
+            $paginator = $this->paginator->paginate(
+                $paiements->getDenormalizedData(),
+                $request->query->getInt('page-trimestre-'.$i +1, 1),
+                10);
+
+            $paginator->setPaginatorOptions(['pageParameterName' => 'page-trimestre-'.$i +1]);
+
+            $paiementsTrimestriel[] = $paginator;
         }
 
         $paiementsQueryResults = $repoPaie->findAnnualNetPaymentGroupByAgent($exercice->getDebutAnnee(), $exercice->getFinAnnee());
