@@ -24,6 +24,8 @@ class RapportController extends AbstractController
     #[Route('/rapports', name: 'rapport_index')]
     public function index(ExerciceRepository $repoExercice, PaiementRepository $repoPaie, AgentRepository $repoAgent, Request $request): Response
     {
+        $is_filter_year = true;
+
         if (!$request->query->has('annee-cloture'))
         {
             return $this->redirectToRoute('rapport_index', ['annee-cloture'=>false]);
@@ -75,6 +77,8 @@ class RapportController extends AbstractController
                 $paiements->getDenormalizedData(),
                 $request->query->getInt('page', 1),
                 10);
+
+            $is_filter_year = false;
         }
 
         return $this->render('rapport/index.twig', [
@@ -83,7 +87,9 @@ class RapportController extends AbstractController
             'minMoisFiltre' => $exercice->getDebutAnnee()->format('Y-m'),
             'maxMoisFiltre' => $exercice->getFinAnnee()->format('Y-m'),
             'formFiltreMois' => $formFiltreMois->createView(),
-            'isTrimestre' => $request->query->has('trimestre')
+            'isTrimestre' => $request->query->has('trimestre'),
+            'is_filter_year' => $is_filter_year,
+            'formData' => $formFiltreMois->getData()
         ]);
     }
 }

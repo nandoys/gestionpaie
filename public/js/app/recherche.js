@@ -35,8 +35,8 @@ recherche.keyup((evt) =>{
 
 })
 
-recherche.focusout((evt) => {
-   // $('#resultat-recherche').html('')
+$('#resultat-recherche').mouseout((evt) => {
+   //$('#resultat-recherche').html('')
 })
 
 recherche.focusin((evt) => {

@@ -291,11 +291,13 @@ class PaiementController extends AbstractController
             if ($paiement->getId() === NULL ) {
                 $this->em->persist($paiement);
 
-                //$this->addFlash('success', "Vous venez d'ajouter un nouveau paiement.");
-                //$this->redirectToRoute('home_agent_liste_paiement', ['id' => $agent->getId()]);
+                $this->addFlash('success', "Vous venez d'ajouter un nouveau paiement.");
+            } else {
+                $this->addFlash('success', "Votre modification du paiement s'est bien éffectuée.");
             }
 
             $this->em->flush();
+            $this->redirectToRoute('home_agent_liste_paiement', ['id' => $agent->getId()]);
         }
 
         return  $this->render('paiement/agent_paie.html.twig', [

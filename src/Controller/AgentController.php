@@ -31,8 +31,7 @@ class AgentController extends AbstractController
     #[Route('/', name: 'home_index')]
     public function index(): Response
     {
-        
-        return $this->render('agent/index.twig');
+        return $this->redirectToRoute('agent_liste');
     }
 
     /**

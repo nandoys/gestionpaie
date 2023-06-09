@@ -48,9 +48,7 @@ class PaiementType extends AbstractType
             ->add('primeDiplome', null, [
                 'disabled' => true
             ])
-            ->add('heureSupplementaire', null, [
-                'disabled' => true
-            ])
+            ->add('heureSupplementaire')
             ->add('transport', null, [
                 'disabled' => true
             ])
