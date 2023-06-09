@@ -16,7 +16,7 @@
           <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#agentAvanceSalaireModal">Avance salaire</button>
 
             <!-- Full screen modal avance salaire -->
-            <div class="modal fade" id="agentAvanceSalaireModal" tabindex="-1" aria-labelledby="agentAvanceSalaireModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal" id="agentAvanceSalaireModal" tabindex="-1" aria-labelledby="agentAvanceSalaireModalLabel" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog modal-fullscreen">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -49,10 +49,16 @@
                                                     <td>{{ avance.dateAt | date('d/m/Y') }}</td>
                                                     <td>{{ avance.montant | number_format }} FC</td>
                                                     <td>{{ avance.mensualite }}</td>
-                                                    <td>{{ avance.mensualitePaye | default('<span class="badge text-bg-info">Aucun</span>') | raw }}</td>
+                                                    <td>
+                                                        {% if avance.paiements | length > 0  %}
+                                                            {{ avance.paiements | length  }}
+                                                        {% else %}
+                                                            <span class="badge text-bg-info">Aucun</span>
+                                                        {% endif %}
+                                                    </td>
                                                     <td>
                                                         {% if avance.estCloture == false  %}
-                                                            {% if avance.mensualitePaye is null or avance.mensualitePaye == 0  %}
+                                                            {% if avance.paiements | length == 0  %}
                                                                 <span class="badge text-bg-danger">Non payé</span>
                                                             {% else %}
                                                                 <span class="badge text-bg-warning">Payé partiellement</span>
@@ -62,10 +68,12 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
+                                                        {% if avance.paiements | length == 0  %}
                                                         <a class="btn btn-primary btn-sm update-agent" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                                                            href="{{ path('paiement_avance_salaire_agent_update', {id: avance.agent.id, avance_id: avance.id }) }}">Modifier<a>
+                                                        {% endif %}
 
-                                                        {% if avance.mensualitePaye is null or avance.mensualitePaye == 0  %}
+                                                        {% if avance.paiements | length == 0  %}
                                                                 <a class="btn btn-danger btn-sm delete-avance" data-id="{{ avance.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                                                                    onclick="delAvanceSalaireBtn(this, '{{ path('paiement_avance_salaire_agent_delete', {id: avance.agent.id, avance_id: avance.id }) }}')" id="{{ avance.id }}">Supprimer</a>
                                                         {% endif %}
@@ -122,7 +130,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retourner</button>
                         </div>
 
                     </div>
@@ -132,7 +140,7 @@
           <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#agentPretModal">Prêt</button>
 
             <!-- Full screen modal prêt -->
-            <div class="modal fade" id="agentPretModal" tabindex="-1" aria-labelledby="agentPretModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal" id="agentPretModal" tabindex="-1" aria-labelledby="agentPretModalLabel" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog modal-fullscreen">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -144,7 +152,7 @@
 
                         <div class="modal-body  bg-light">
                             <div class="d-flex align-items-start">
-                                <div class="col-8">
+                                <div class="col-8 me-2">
                                     <div class="table-responsive">
                                         {% for message in app.flashes('success-pret') %}
                                             <div class="alert alert-success alert-dismissible" role="alert">{{ message }}</div>
@@ -167,10 +175,16 @@
                                                     <td>{{ pret.typePret }}</td>
                                                     <td>{{ pret.montant | number_format }} FC</td>
                                                     <td>{{ pret.mensualite }}</td>
-                                                    <td>{{ pret.mensualitePaye | default('<span class="badge text-bg-info">Aucun</span>') | raw }}</td>
+                                                    <td>
+                                                        {% if pret.paiements | length > 0  %}
+                                                            {{ pret.paiements | length  }}
+                                                        {% else %}
+                                                            <span class="badge text-bg-info">Aucun</span>
+                                                        {% endif %}
+                                                    </td>
                                                     <td>
                                                         {% if pret.estCloture == false  %}
-                                                            {% if pret.mensualitePaye is null or pret.mensualitePaye == 0  %}
+                                                            {% if pret.paiements | length == 0  %}
                                                                 <span class="badge text-bg-danger">Non payé</span>
                                                             {% else %}
                                                                 <span class="badge text-bg-warning">Payé partiellement</span>
@@ -180,13 +194,13 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                        <a class="btn btn-primary btn-sm update-agent" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
-                                                           href="{{ path('paiement_pret_agent_update', {id: pret.agent.id, pret_id: pret.id }) }}">Modifier<a>
+                                                        {% if pret.paiements | length == 0  %}
+                                                            <a class="btn btn-primary btn-sm update-agent" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                                               href="{{ path('paiement_pret_agent_update', {id: pret.agent.id, pret_id: pret.id }) }}">Modifier<a>
 
-                                                                {% if pret.mensualitePaye is null or pret.mensualitePaye == 0  %}
-                                                                    <a class="btn btn-danger btn-sm delete-pret" data-id="{{ pret.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
-                                                                       onclick="delPretBtn(this, '{{ path('paiement_pret_agent_delete', {id: pret.agent.id, pret_id: pret.id }) }}')" id="{{ pret.id }}">Supprimer</a>
-                                                                {% endif %}
+                                                            <a class="btn btn-danger btn-sm delete-pret" data-id="{{ pret.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                                               onclick="delPretBtn(this, '{{ path('paiement_pret_agent_delete', {id: pret.agent.id, pret_id: pret.id }) }}')" id="{{ pret.id }}">Supprimer</a>
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                             {%endfor%}
@@ -246,7 +260,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retourner</button>
                         </div>
 
                     </div>
@@ -277,10 +291,6 @@
             </div>
         </div>
         {% endif %}
-        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar align-text-bottom" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          This week
-        </button>
       </div>
     </div>  
 

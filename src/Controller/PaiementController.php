@@ -16,6 +16,7 @@ use App\Repository\ExerciceRepository;
 use App\Repository\PaiementRepository;
 use App\Repository\PretAgentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use Picqer\Barcode\BarcodeGeneratorHTML;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -86,7 +87,7 @@ class PaiementController extends AbstractController
             if ($avanceSalaire->getId() === NULL ) {
                 $this->em->persist($avanceSalaire);
                 $this->addFlash('success-avance', "Vous venez d'ajouter une nouvelle avance sur salaire pour l'agent {$agent->getNomComplet()} 
-                (Matricule: {$agent->getMatricule()}) d'un montant de {$avanceSalaire->getMontant()} en date du {$avanceSalaire->getDateAt()->format('d/m/y')}");
+                (Matricule: {$agent->getMatricule()}) d'un montant de {$avanceSalaire->getMontant()} FC en date du {$avanceSalaire->getDateAt()->format('d/m/Y')}");
             }
             else {
                 $this->addFlash('success-avance', "Vos modifications sur l'avance sur salaire de l'agent {$agent->getNomComplet()} (Matricule: {$agent->getMatricule()}) ont été enregistrées");
@@ -129,7 +130,7 @@ class PaiementController extends AbstractController
             if ($pretAgent->getId() === NULL ) {
                 $this->em->persist($pretAgent);
                 $this->addFlash('success-pret', "Vous venez d'ajouter un prêt ". strtolower($pretAgent->getTypePret()) ." pour l'agent {$agent->getNomComplet()} 
-                (Matricule: {$agent->getMatricule()}) d'un montant de {$pretAgent->getMontant()} en date du {$pretAgent->getDateAt()->format('d/m/y')}");
+                (Matricule: {$agent->getMatricule()}) d'un montant de {$pretAgent->getMontant()} FC en date du {$pretAgent->getDateAt()->format('d/m/Y')}");
             }
             else {
                 $this->addFlash('success-pret', "Vos modifications sur le prêt ". strtolower($pretAgent->getTypePret()) ." de l'agent {$agent->getNomComplet()} (Matricule: {$agent->getMatricule()}) ont été enregistrées");
@@ -171,6 +172,15 @@ class PaiementController extends AbstractController
 
         if($paiement->getId() !== NULL) {
             $this->em->remove($paiement);
+
+            foreach ($paiement->getAvances()->toArray() as $avance) {
+                $avance->setEstCloture(false);
+            }
+
+            foreach ($paiement->getPrets()->toArray() as $pret) {
+                $pret->setEstCloture(false);
+            }
+
             $this->em->flush();
             $this->addFlash('success', "Votre suppression s'est bien effectuée.");
         }
@@ -210,6 +220,9 @@ class PaiementController extends AbstractController
         return $this->redirectToRoute('paiement_agent_liste', ['id' => $agent->getId(), 'page-pret' => 1]);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/agent/{id}/paie', name: 'paiement_agent')]
     #[Route('/agent/{id}/paie/{paiement_id}/update', name: 'paiement_agent_update')]
     public function paiement_agent(Agent $agent, Request $request, AgentRepository $repoAgent): Response
@@ -217,7 +230,12 @@ class PaiementController extends AbstractController
         $exercice = $this->repoExercice->findOneByEstCloture(false);
 
         $paiement_id = $request->attributes->get('paiement_id');
-        $paiement = $this->repoPaie->findOneBy(['id'=>$paiement_id,'agent' =>$agent]) ?? new Paiement($agent->getRemuneration(), $agent->getIndemnite(), $agent);
+        $paiement = $this->repoPaie->findOneBy(['id'=>$paiement_id,'agent' =>$agent]) ??
+            new Paiement($agent->getRemuneration(), $agent->getIndemnite(), $agent, $this->em);
+
+        if ($paiement->getId() !== NULL ) {
+            $paiement->setEntityManager($this->em);
+        }
 
         $agents = $this->paginator->paginate(
             $repoAgent->findAll(),
@@ -234,9 +252,46 @@ class PaiementController extends AbstractController
 
         if ($form_paie->isSubmitted() && $form_paie->isValid()) {
 
+            $avance = $this->repoAvance->findFirstUnpaidAvanceSalaire($paiement->getAgent());
+
+            if ($avance !== NULL) {
+                $avance->cloturer();
+                $paiement->addAvance($avance);
+            }
+
+            $pretLogement = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Logement');
+
+            if ($pretLogement !== NULL) {
+                $pretLogement->cloturer();
+                $paiement->addPret($pretLogement);
+            }
+
+            $pretFraisScolaire = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Frais scolaire');
+
+            if ($pretFraisScolaire !== NULL) {
+                $pretFraisScolaire->cloturer();
+                $paiement->addPret($pretLogement);
+            }
+
+            $pretDeuil = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Deuil');
+
+            if ($pretDeuil !== NULL) {
+                $pretDeuil->cloturer();
+                $paiement->addPret($pretLogement);
+            }
+
+            $pretAutres = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Autres');
+
+            if ($pretAutres !== NULL) {
+
+                $pretAutres->cloturer();
+                $paiement->addPret($pretLogement);
+            }
+
             if ($paiement->getId() === NULL ) {
                 $this->em->persist($paiement);
-                //$this->addFlash('success', "Vous venez d'ajouter un nouveau paiment.");
+
+                //$this->addFlash('success', "Vous venez d'ajouter un nouveau paiement.");
                 //$this->redirectToRoute('home_agent_liste_paiement', ['id' => $agent->getId()]);
             }
 

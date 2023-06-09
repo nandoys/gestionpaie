@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Agent;
 use App\Entity\AvanceSalaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,20 @@ class AvanceSalaireRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findFirstUnpaidAvanceSalaire(Agent $agent) {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.dateAt = (SELECT MIN(a2.dateAt) FROM App\Entity\AvanceSalaire a2 where a2.estCloture = false and a2.agent = :agent)')
+            ->andWhere('a.estCloture = false')
+            ->andWhere('a.agent = :agent')
+            ->setParameters(['agent'=>$agent])
+            ->getQuery()
+            ->getOneOrNullResult();
+
     }
 
 //    /**

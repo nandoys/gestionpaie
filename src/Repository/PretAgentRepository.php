@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Agent;
 use App\Entity\PretAgent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,21 @@ class PretAgentRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findFirstUnpaidPret(Agent $agent, string $typePret) {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.dateAt = (SELECT MIN(p2.dateAt) FROM App\Entity\PretAgent p2 where p2.estCloture = false and p2.agent = :agent)')
+            ->andWhere('p.typePret = :typePret')
+            ->andWhere('p.estCloture = false')
+            ->andWhere('p.agent = :agent')
+            ->setParameters(compact('agent', 'typePret'))
+            ->getQuery()
+            ->getOneOrNullResult();
+
     }
 
 //    /**

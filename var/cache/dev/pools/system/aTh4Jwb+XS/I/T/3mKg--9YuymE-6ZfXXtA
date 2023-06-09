@@ -22,6 +22,10 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
         clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
         clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
         clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
+        clone $p['Symfony\\Component\\Serializer\\Mapping\\AttributeMetadata'],
     ],
     null,
     [
@@ -47,6 +51,10 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
                 'agent',
                 'abscence',
                 'deductionPrecedente',
+                'avances',
+                'prets',
+                'em',
+                'entityManager',
             ],
             'attributesMetadata' => [
                 [
@@ -69,6 +77,10 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
                     'agent' => $o[17],
                     'abscence' => $o[18],
                     'deductionPrecedente' => $o[19],
+                    'avances' => $o[20],
+                    'prets' => $o[21],
+                    'em' => $o[22],
+                    'entityManager' => $o[23],
                 ],
             ],
             'groups' => [

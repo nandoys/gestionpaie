@@ -6,12 +6,13 @@ use App\Entity\Indemnite;
 use App\Entity\Paiement;
 use App\Entity\Remuneration;
 use App\Repository\AgentRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DenormaliseurPaie
 {
     private $paiements = [];
 
-    public function __construct(array $data, AgentRepository $repoAgent) {
+    public function __construct(array $data, AgentRepository $repoAgent, EntityManagerInterface $em) {
         foreach ($data as $result) {
             $remuneration = new Remuneration();
             $remuneration->setBase($result['base'])
@@ -25,7 +26,7 @@ class DenormaliseurPaie
                 ->setAutres($result['autres']);
 
             $agent = $repoAgent->find($result['agent_id']);
-            $paiement = new Paiement($remuneration, $indemnite, $agent);
+            $paiement = new Paiement($remuneration, $indemnite, $agent, $em);
 
             $paiement->setAbscence($result['abscence'])
                 ->setCnss($result['cnss'])

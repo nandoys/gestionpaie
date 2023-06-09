@@ -22,11 +22,21 @@ class PaiementType extends AbstractType
         $builder
             ->add('cnss')
             ->add('ipr')
-            ->add('avanceSalaire')
-            ->add('pretLogement')
-            ->add('pretFraisScolaire')
-            ->add('pretDeuil')
-            ->add('pretAutre')
+            ->add('avanceSalaire', null, [
+                'disabled' => true
+            ])
+            ->add('pretLogement', null, [
+                'disabled' => true
+            ])
+            ->add('pretFraisScolaire', null, [
+                'disabled' => true
+            ])
+            ->add('pretDeuil', null, [
+                'disabled' => true
+            ])
+            ->add('pretAutre', null, [
+                'disabled' => true
+            ])
             ->add('abscence')
             ->add('dateAt', null, [
                 'widget' => 'single_text',

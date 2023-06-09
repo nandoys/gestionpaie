@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PretAgentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -48,6 +50,14 @@ class PretAgent
     #[ORM\Column(length: 255)]
     private ?string $typePret = null;
 
+    #[ORM\ManyToMany(targetEntity: Paiement::class, inversedBy: 'prets')]
+    private Collection $paiements;
+
+    public function __construct()
+    {
+        $this->paiements = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -73,18 +83,6 @@ class PretAgent
     public function setMensualite(int $mensualite): self
     {
         $this->mensualite = $mensualite;
-
-        return $this;
-    }
-
-    public function getMensualitePaye(): ?int
-    {
-        return $this->mensualitePaye;
-    }
-
-    public function setMensualitePaye(?int $mensualitePaye): self
-    {
-        $this->mensualitePaye = $mensualitePaye;
 
         return $this;
     }
@@ -146,6 +144,43 @@ class PretAgent
     {
         $this->typePret = $typePret;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Paiement>
+     */
+    public function getPaiements(): Collection
+    {
+        return $this->paiements;
+    }
+
+    public function addPaiement(Paiement $paiement): self
+    {
+        if (!$this->paiements->contains($paiement)) {
+            $this->paiements->add($paiement);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiement $paiement): self
+    {
+        $this->paiements->removeElement($paiement);
+
+        return $this;
+    }
+
+    public function calculDueMensuel(): float|int
+    {
+        return $this->montant / $this->mensualite;
+    }
+
+    public function cloturer(): static
+    {
+        if ($this->mensualite == $this->paiements->count() + 1) {
+            $this->estCloture = true;
+        }
         return $this;
     }
 }

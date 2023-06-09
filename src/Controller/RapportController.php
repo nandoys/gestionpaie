@@ -8,6 +8,7 @@ use App\Repository\ExerciceRepository;
 use App\Repository\PaiementRepository;
 use App\Service\DateRange;
 use App\Service\DenormaliseurPaie;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RapportController extends AbstractController
 {
-    public function __construct(private PaginatorInterface $paginator, private UrlGeneratorInterface $router){
+    public function __construct(private PaginatorInterface $paginator, private UrlGeneratorInterface $router, private EntityManagerInterface $em){
 
     }
     #[Route('/rapports', name: 'rapport_index')]
@@ -45,14 +46,14 @@ class RapportController extends AbstractController
                 $trimestres[$i][0]['mois'],$trimestres[$i][0]['annee'],$trimestres[$i][$l]['mois'],$trimestres[$i][$l]['annee'],
             );
 
-            $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent);
+            $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
             $paiementsTrimestriel[] = $paiements->getDenormalizedData();
         }
 
         $paiementsQueryResults = $repoPaie->findAnnualNetPaymentGroupByAgent($exercice->getDebutAnnee(), $exercice->getFinAnnee());
 
-        $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent);
+        $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
         $paiements = $this->paginator->paginate(
             $paiements->getDenormalizedData(),
@@ -68,7 +69,7 @@ class RapportController extends AbstractController
 
         if ($formFiltreMois->isSubmitted() && $formFiltreMois->isValid()) {
             $paiementsQueryResults = $repoPaie->findMonthNetPaymentGroupByAgent($formFiltreMois->getData()['filtreMois']->format('m'));
-            $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent);
+            $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
             $paiements = $this->paginator->paginate(
                 $paiements->getDenormalizedData(),
@@ -81,7 +82,8 @@ class RapportController extends AbstractController
             'paiementsTrimestriel' => $paiementsTrimestriel,
             'minMoisFiltre' => $exercice->getDebutAnnee()->format('Y-m'),
             'maxMoisFiltre' => $exercice->getFinAnnee()->format('Y-m'),
-            'formFiltreMois' => $formFiltreMois->createView()
+            'formFiltreMois' => $formFiltreMois->createView(),
+            'isTrimestre' => $request->query->has('trimestre')
         ]);
     }
 }

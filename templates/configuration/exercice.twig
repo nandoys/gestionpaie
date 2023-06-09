@@ -103,6 +103,11 @@
                         <a class="btn btn-primary btn-sm update-exercice"  data-id="{{ exercice.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
                         onclick="updateBtn(this, '{{ path('app_configuration_exercice_update', {'id':exercice.id, 'page':page_param}) }}')">Modifier<a>
                         {% endif %}
+
+                        {% if exercice.estCloture  %}
+                            <a class="btn btn-success btn-sm update-exercice"  data-id="{{ exercice.id }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                               onclick="updateBtn(this, '{{ path('app_configuration_exercice_activate', {'id':exercice.id, 'page':page_param}) }}')">Activer<a>
+                        {% endif %}
                     </td>
                     </tr>
                     {% endfor%}

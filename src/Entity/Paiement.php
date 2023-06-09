@@ -3,11 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\Get;
+use App\Repository\AvanceSalaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PaiementRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: PaiementRepository::class)]
 #[ApiResource(
@@ -27,11 +34,11 @@ class Paiement
 
     #[ORM\Column]
     #[Groups('read:paiements')]
-    private ?float $cnss = null;
+    private ?float $cnss;
 
     #[ORM\Column]
     #[Groups('read:paiements')]
-    private ?float $ipr = null;
+    private ?float $ipr;
 
     #[ORM\Column]
     #[Groups('read:paiements')]
@@ -95,7 +102,13 @@ class Paiement
     private ?float $abscence = null;
     private int $deductionPrecedente = 0;
 
-    public function __construct(Remuneration $remuneration, Indemnite $indemnite, Agent $agent)
+    #[ORM\ManyToMany(targetEntity: AvanceSalaire::class, mappedBy: 'paiements')]
+    private Collection $avances;
+
+    #[ORM\ManyToMany(targetEntity: PretAgent::class, mappedBy: 'paiements')]
+    private Collection $prets;
+
+    public function __construct(Remuneration $remuneration, Indemnite $indemnite, Agent $agent, private EntityManagerInterface $em)
     {
         // définir l'agent à payer
         $this->agent = $agent;
@@ -122,6 +135,8 @@ class Paiement
         $this->abscence = 0;
 
         $this->dateAt = new \DateTime();
+        $this->avances = new ArrayCollection();
+        $this->prets = new ArrayCollection();
 
     }
 
@@ -380,6 +395,85 @@ class Paiement
     {
 
         return $this->calculSalaireBrut() - $this->calculDeduction();
+    }
+
+    /**
+     * @return Collection<int, AvanceSalaire>
+     */
+    public function getAvances(): Collection
+    {
+        return $this->avances;
+    }
+
+    public function addAvance(AvanceSalaire $avance): self
+    {
+        if (!$this->avances->contains($avance)) {
+            $this->avances->add($avance);
+            $avance->addPaiement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvance(AvanceSalaire $avance): self
+    {
+        if ($this->avances->removeElement($avance)) {
+            $avance->removePaiement($this);
+        }
+
+        return $this;
+    }
+
+    public function getEntityManager() {
+        return $this->em;
+    }
+
+    public function setEntityManager(EntityManagerInterface $em) {
+         $this->em = $em;
+
+         return $this;
+    }
+
+    /**
+     * @return Collection<int, PretAgent>
+     */
+    public function getPrets(): Collection
+    {
+        return $this->prets;
+    }
+
+    public function addPret(PretAgent $pret): self
+    {
+        if (!$this->prets->contains($pret)) {
+            $this->prets->add($pret);
+            $pret->addPaiement($this);
+        }
+
+        return $this;
+    }
+
+    public function removePret(PretAgent $pret): self
+    {
+        if ($this->prets->removeElement($pret)) {
+            $pret->removePaiement($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    #[Assert\Callback()]
+    public function validateAvance(ExecutionContextInterface $context, $payload): void
+    {
+        $avance = $this->em->getRepository(AvanceSalaire::class)->findFirstUnpaidAvanceSalaire($this->agent);
+
+        if ($avance !== NULL &&  $avance->calculDueMensuel() !== $this->avanceSalaire) {
+            $context->buildViolation("Le montant n'est pas égal à la mensualité à payer! dû {$avance->calculDueMensuel()} FC")
+                ->atPath('avanceSalaire')
+                ->addViolation();
+        }
     }
 
 }

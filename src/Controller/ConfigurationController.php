@@ -142,7 +142,6 @@ class ConfigurationController extends AbstractController
             if ($is_creating_exercice) {
                 $this->em->persist($exercice);
 
-
                 $this->addFlash('success', "Vous venez d'ajouter un nouveau exercice");
             } else {
                 $this->addFlash('success', "Vos modifications ont été enregistrées");
@@ -177,5 +176,38 @@ class ConfigurationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_configuration');
+    }
+
+    #[Route('/configuration/exercice/{id}/cloturer', name: 'app_configuration_exercice_close')]
+    public function close_exercice(Exercice $exercice, ExerciceRepository $repoExercice): RedirectResponse {
+
+        $count = $repoExercice->count(['estCloture' => false]);
+
+        if ($count == 1) {
+            $this->addFlash('success', "L'exercice {$exercice->getDebutAnnee()->format('d/m/Y')} - {$exercice->getFinAnnee()->format('d/m/Y')} ne peut pas être clôturé. Au moins une année doit être active");
+
+            return $this->redirectToRoute('app_configuration_exercice');
+        }
+
+        $exercice->setEstCloture(true);
+        $this->em->flush();
+
+        $this->addFlash('success', "L'exercice {$exercice->getDebutAnnee()->format('d/m/Y')} - {$exercice->getFinAnnee()->format('d/m/Y')} a été clôturé");
+
+        return $this->redirectToRoute('app_configuration_exercice');
+    }
+
+    #[Route('/configuration/exercice/{id}/activer', name: 'app_configuration_exercice_activate')]
+    public function activate_exercice(Exercice $exercice, ExerciceRepository $repoExercice): RedirectResponse {
+
+        foreach ($repoExercice->findAll() as $exercices) {
+            $exercices->setEstCloture(true);
+        }
+        $exercice->setEstCloture(false);
+        $this->em->flush();
+
+        $this->addFlash('success', "L'exercice {$exercice->getDebutAnnee()->format('d/m/Y')} - {$exercice->getFinAnnee()->format('d/m/Y')} a été activé");
+
+        return $this->redirectToRoute('app_configuration_exercice');
     }
 }

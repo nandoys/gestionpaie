@@ -2,6 +2,8 @@ const agentModal = document.getElementById('agentModal')
 
 const fonctionAgent = $('#agent_salaire_agent_fonction')
 
+const diplomeAgent = $('#agent_salaire_agent_diplome')
+
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -104,5 +106,13 @@ fonctionAgent.change((item) => {
     const id = fonctionAgent.val()
     $.get(`${window.origin}/api/fonctions/${id}`).then((data) => {
         $('#agent_salaire_remuneration_base').val(data.baseSalarial)
+    })
+})
+
+diplomeAgent.change((item) => {
+    const id = diplomeAgent.val()
+    $.get(`${window.origin}/api/diplomes/${id}`).then((data) => {
+        console.log(data)
+        $('#agent_salaire_remuneration_primeDiplome').val(data.primeDiplome)
     })
 })
