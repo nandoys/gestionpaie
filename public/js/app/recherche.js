@@ -10,9 +10,11 @@ function rechercheAgent(nom) {
         if(data['hydra:totalItems'] > 0 && data['hydra:totalItems'] < 5) {
             data['hydra:member'].forEach(agent => {
                 lien_agents.push(`
-                        <a class="list-group-item list-group-item-action border-bottom border-dark link-primary px-3 py-2" href="#">
-                            ${agent.nomComplet}
-                        </a>
+                        <div class="list-group-item list-group-item-action border-bottom border-dark link-primary px-3 py-2">
+                            ${agent.nomComplet} 
+                            <a href="/agent/${agent.id}/update" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">modifier</a>
+                            <a href="/agent/${agent.id}/paiements" class="btn btn-secondary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">paiements</a>
+                        </div>
                     `)
             })
         }
@@ -34,7 +36,7 @@ recherche.keyup((evt) =>{
 })
 
 recherche.focusout((evt) => {
-    $('#resultat-recherche').html('')
+   // $('#resultat-recherche').html('')
 })
 
 recherche.focusin((evt) => {
