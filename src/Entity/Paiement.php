@@ -391,6 +391,12 @@ class Paiement
         return array_sum($deductions);
     }
 
+    public function pretAccorde () {
+        $prets = array($this->pretLogement, $this->pretDeuil, $this->pretAutre);
+
+        return array_sum($prets);
+    }
+
     public function calculNetAPayer(): ?float
     {
 

@@ -15,6 +15,8 @@ use App\Repository\AvanceSalaireRepository;
 use App\Repository\ExerciceRepository;
 use App\Repository\PaiementRepository;
 use App\Repository\PretAgentRepository;
+use App\Service\DateRange;
+use App\Service\DenormaliseurPaie;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
@@ -227,6 +229,11 @@ class PaiementController extends AbstractController
     #[Route('/agent/{id}/paie/{paiement_id}/update', name: 'paiement_agent_update')]
     public function paiement_agent(Agent $agent, Request $request, AgentRepository $repoAgent): Response
     {
+        if (count($this->repoExercice->findAll()) == 0) {
+            $this->addFlash('warning', "Vous devez avoir un exercice avant d'accéder au module de paie! Veuillez en créer un par ici");
+            return $this->redirectToRoute('app_configuration_exercice');
+        }
+
         $exercice = $this->repoExercice->findOneByEstCloture(false);
 
         $paiement_id = $request->attributes->get('paiement_id');
@@ -297,7 +304,7 @@ class PaiementController extends AbstractController
             }
 
             $this->em->flush();
-            $this->redirectToRoute('home_agent_liste_paiement', ['id' => $agent->getId()]);
+            return $this->redirectToRoute('paiement_agent_liste', ['id' => $agent->getId()]);
         }
 
         return  $this->render('paiement/agent_paie.html.twig', [
@@ -308,28 +315,57 @@ class PaiementController extends AbstractController
         ]);
     }
 
-    #[Route('/bulletin', name: 'bulletin_paie')]
-    //#[Route('/bulletin/mois/{mois}/agent/{id}', name: 'bulletin_paie_agent')]
-    public function bulletin_paie(/*$mois, Agent $agent*/): Response
+    #[Route('/bulletin', name: 'bulletin_paie_index')]
+    public function bulletin_paie_index(DateRange $dateRange, AgentRepository $repoAgent, Request $request): Response
     {
-        //$bulletin = $this->repoPaie->findPaymentBill($mois, $agent);
-        //dump($bulletin);
-        $generator = new BarcodeGeneratorHTML();
-        $codebar = $generator->getBarcode('081231723897', $generator::TYPE_CODE_128);
-        return $this->render('paiement/bulletin_paie.twig', [
-            'codebar' =>  $codebar
+        if (count($this->repoExercice->findAll()) == 0) {
+            $this->addFlash('warning', "Vous devez avoir un exercice avant d'accéder au module de paie! Veuillez en créer un par ici");
+            return $this->redirectToRoute('app_configuration_exercice');
+        }
+
+        $exercice = $this->repoExercice->findOneByEstCloture(false);
+        $periodes = $dateRange->getMonthsInRange($exercice->getDebutAnnee(), $exercice->getFinAnnee());
+
+        $bulletins = [];
+
+        foreach ($periodes as $periode) {
+            $data = $this->repoPaie->findAllPaymentBill($periode['mois'], $periode['annee']);
+
+            $data_denormalized = new DenormaliseurPaie($data, $repoAgent, $this->em);
+
+            $paginator = $this->paginator->paginate(
+                $data_denormalized->getDenormalizedData(),
+                $request->query->getInt('page-periode-'.$periode['mois'].$periode['annee'], 1),
+                10);
+
+            $paginator->setPaginatorOptions(['pageParameterName' => 'page-periode-'.$periode['mois'].$periode['annee'] ]);
+
+            $bulletins[] = [
+                'mois' => $periode['mois'],
+                'annee' => $periode['annee'],
+                'paies' => $paginator
+            ];
+        }
+
+        return $this->render('bulletin/index.twig', [
+            'bulletins' => $bulletins
         ]);
     }
 
-    #[Route('/bulletin/mois/{mois}/agent/{id}', name: 'bulletin_paie_agent')]
-    public function bulletin_paie_agent($mois, Agent $agent): Response
+    #[Route('/bulletin/mois/{mois}/annee/{annee}/agent/{id}', name: 'bulletin_paie_agent')]
+    public function bulletin_paie_agent($mois, $annee, Agent $agent, AgentRepository $repoAgent): Response
     {
         $bulletin = $this->repoPaie->findPaymentBill($mois, $agent);
-        dump($bulletin);
+
+        $bulletin = new DenormaliseurPaie($bulletin, $repoAgent, $this->em);
+
         $generator = new BarcodeGeneratorHTML();
-        $codebar = $generator->getBarcode('081231723897', $generator::TYPE_CODE_128);
+        $codebar = $generator->getBarcode($agent->getNomComplet(), $generator::TYPE_CODE_128);
         return $this->render('paiement/bulletin_paie.twig', [
-            'codebar' =>  $codebar
+            'codebar' =>  $codebar,
+            'mois' =>  $mois,
+            'agent' => $agent,
+            'bulletin' => $bulletin->getDenormalizedData()[0]
         ]);
     }
 }

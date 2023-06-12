@@ -137,9 +137,26 @@ class ConfigurationController extends AbstractController
 
         $form_exercice->handleRequest($request);
 
+
+        if (count($this->repoExercice->findAll()) == 1) {
+            $exerciceInactive = $this->repoExercice->findOneBy(['estCloture' => true]);
+
+            if ($exerciceInactive != NULL) {
+                $exerciceInactive->setEstCloture(false);
+                $this->em->flush();
+            }
+        }
+
         if ($form_exercice->isSubmitted() && $form_exercice->isvalid()) {
 
             if ($is_creating_exercice) {
+
+                $exerciceEnCours = $this->repoExercice->findOneBy(['estCloture' => false]);
+
+                if ($exerciceEnCours != NULL) {
+                    $exerciceEnCours->setEstCloture(true);
+                }
+
                 $this->em->persist($exercice);
 
                 $this->addFlash('success', "Vous venez d'ajouter un nouveau exercice");

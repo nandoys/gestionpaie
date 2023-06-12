@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bulletin de paie{% endblock %}
+
+{% block content %}
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        {% for bulletin in bulletins %}
+            {% if bulletin.mois == 1 %}
+                {% set mois = 'Janvier' %}
+            {% elseif bulletin.mois == 2 %}
+                {% set mois = 'Février' %}
+            {% elseif bulletin.mois == 3 %}
+                {% set mois = 'Mars' %}
+            {% elseif bulletin.mois == 4 %}
+                {% set mois = 'Avril' %}
+            {% elseif bulletin.mois == 5 %}
+                {% set mois = 'Mai' %}
+            {% elseif bulletin.mois == 6 %}
+                {% set mois = 'Juin' %}
+            {% elseif bulletin.mois == 7 %}
+                {% set mois = 'Juillet' %}
+            {% elseif bulletin.mois == 8 %}
+                {% set mois = 'Août' %}
+            {% elseif bulletin.mois == 9 %}
+                {% set mois = 'Septembre' %}
+            {% elseif bulletin.mois == 10 %}
+                {% set mois = 'Octobre' %}
+            {% elseif bulletin.mois == 11 %}
+                {% set mois = 'Novembre' %}
+            {% elseif bulletin.mois == 12 %}
+                {% set mois = 'Décembre' %}
+            {% endif %}
+            {% if bulletin.paies | length > 0 %}
+            <div class="mt-5">
+                <h4 class="border-bottom">Bulletins {{ mois }} {{ bulletin.annee }}</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Noms</th>
+                            <th scope="col">Salaire de base</th>
+                            <th scope="col">Indemnités</th>
+                            <th scope="col">Salaire brut</th>
+                            <th scope="col">Déduction</th>
+                            <th scope="col">Salaire Net</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for paiement in bulletin.paies %}
+                            <tr>
+                                <td>{{ paiement.agent.nomComplet }} </td>
+                                <td>{{ paiement.calculBrutImposable | number_format }} FC</td>
+                                <td>{{ paiement.calculTotalIndemnite | number_format }} FC</td>
+                                <td>{{ paiement.calculSalaireBrut | number_format }} FC</td>
+                                <td>{{ paiement.calculDeduction | number_format }} FC</td>
+                                <td>{{ paiement.calculNetAPayer | number_format }} FC</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm update-agent" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                                       href="{{ path('bulletin_paie_agent', {'mois':bulletin.mois, 'annee': bulletin.annee, id: paiement.agent.id }) }}">Imprimer<a>
+                                </td>
+                            </tr>
+                        {%endfor%}
+                        </tbody>
+                    </table>
+                    <div>
+                        <nav aria-label="Page navigation">
+                            {{ knp_pagination_render(bulletin.paies) }}
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </main>
+
+{% endblock %}
+
+{% block extra_javascripts %}
+
+
+{% endblock %}

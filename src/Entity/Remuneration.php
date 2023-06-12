@@ -26,6 +26,11 @@ class Remuneration
     #[ORM\JoinColumn(nullable: false)]
     private ?Agent $agent = null;
 
+    public function __construct()
+    {
+        $this->heureSupplementaire = 0;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

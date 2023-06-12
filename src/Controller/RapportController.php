@@ -26,6 +26,11 @@ class RapportController extends AbstractController
     {
         $is_filter_year = true;
 
+        if (count($repoExercice->findAll()) == 0) {
+            $this->addFlash('warning', "Vous devez avoir un exercice avant d'accéder au module rapport! Veuillez en créer un");
+            return $this->redirectToRoute('app_configuration_exercice');
+        }
+
         if (!$request->query->has('annee-cloture'))
         {
             return $this->redirectToRoute('rapport_index', ['annee-cloture'=>false]);

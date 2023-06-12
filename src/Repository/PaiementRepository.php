@@ -56,7 +56,7 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            a.id AS agent_id, p.dateAt AS dateAt')
+            a.id AS agent_id')
             ->where('p.dateAt >= :debutDate')
             ->andWhere('p.dateAt <= :finDate')
             ->setParameters(compact('debutDate', 'finDate'))
@@ -88,7 +88,7 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            a.id AS agent_id, p.dateAt AS dateAt')
+            a.id AS agent_id')
             ->where('MONTH(p.dateAt) = :month')
             ->setParameters(compact('month'))
             ->groupBy('p.agent')
@@ -103,10 +103,25 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            a.id AS agent_id, p.dateAt AS dateAt')
+            a.id AS agent_id')
             ->where('MONTH(p.dateAt) = :month')
             ->andWhere('p.agent = :agent')
             ->setParameters(compact('month', 'agent'))
+            ->groupBy('p.agent')
+            ->join('p.agent', 'a')
+            ->getQuery()
+            ->getResult();
+    }
+    public function findAllPaymentBill($month, $year) {
+        return $this->createQueryBuilder('p')
+            ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
+            SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
+            SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
+            SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
+            a.id AS agent_id')
+            ->where('MONTH(p.dateAt) = :month')
+            ->andWhere('YEAR(p.dateAt) = :year')
+            ->setParameters(compact('month', 'year'))
             ->groupBy('p.agent')
             ->join('p.agent', 'a')
             ->getQuery()

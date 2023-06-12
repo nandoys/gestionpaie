@@ -14,7 +14,7 @@
             <h4 class="h5 position-relative">Exercices</h4>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group me-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exerciceModal">Nouvelle exercice</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exerciceModal">Nouveau exercice</button>
 
                      <!--  modal -->
                     <div class="modal fade" id="exerciceModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exerciceModalLabel" aria-hidden="true" style="display: none;">
@@ -22,7 +22,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-4" id="agentModalFullscreenXxlLabel">
-                                    {% if is_creating_exercice %}Nouvelle {% else %} Modifier {% endif %}exercice
+                                    {% if is_creating_exercice %}Nouveau {% else %} Modifier {% endif %}exercice
                                     </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
@@ -65,6 +65,10 @@
 
         {% for message in app.flashes('success') %}
           <div class="alert alert-success alert-dismissible" role="alert">{{ message }}</div>
+        {% endfor %}
+
+        {% for message in app.flashes('warning') %}
+            <div class="alert alert-warning alert-dismissible" role="alert">{{ message }}</div>
         {% endfor %}
 
         <div class="table-responsive">

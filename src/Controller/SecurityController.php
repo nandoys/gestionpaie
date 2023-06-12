@@ -3,6 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\DiplomeRepository;
+use App\Repository\EtatCivilRepository;
+use App\Repository\FonctionRepository;
+use App\Repository\UserRepository;
+use App\Service\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,21 +20,15 @@ class SecurityController extends AbstractController
     public function __construct(private UserPasswordHasherInterface $hasher, private EntityManagerInterface $em) {}
 
     #[Route('/login', name: 'security_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils, Configuration $config): Response
     {
         // get the login error if there is one
        $error = $authenticationUtils->getLastAuthenticationError();
-        
-       $user = new User();
 
-       $user->setUsername('Gamaliel')
-       ->setPassword($this->hasher->hashPassword($user, '1234'))
-       ;
-        /*
-       $this->em->persist($user);
-
-       $this->em->flush();
-       */
+        $config->createIfNoDiplome();
+        $config->createIfNoFonction();
+        $config->createIfNoMaritalStatus();
+        $config->createIfNoUser();
 
        // last username entered by the user
        $lastUsername = $authenticationUtils->getLastUsername();

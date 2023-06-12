@@ -4,184 +4,161 @@
 
 {% block content %}
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom d-print-none">
-            <h1 class="h2 position-relative">
-                Bulletin
-            </h1>
-        </div>
-        <div class="d-flex justify-content-center">
-            <div class="col-5 bg-info">
-                    Information école
+        {% if mois == 1 %}
+            {% set mois = 'Janvier' %}
+        {% elseif mois == 2 %}
+            {% set mois = 'Février' %}
+        {% elseif mois == 3 %}
+            {% set mois = 'Mars' %}
+        {% elseif mois == 4 %}
+            {% set mois = 'Avril' %}
+        {% elseif mois == 5 %}
+            {% set mois = 'Mai' %}
+        {% elseif mois == 6 %}
+            {% set mois = 'Juin' %}
+        {% elseif mois == 7 %}
+            {% set mois = 'Juillet' %}
+        {% elseif mois == 8 %}
+            {% set mois = 'Août' %}
+        {% elseif mois == 9 %}
+            {% set mois = 'Septembre' %}
+        {% elseif mois == 10 %}
+            {% set mois = 'Octobre' %}
+        {% elseif mois == 11 %}
+            {% set mois = 'Novembre' %}
+        {% elseif mois == 12 %}
+            {% set mois = 'Décembre' %}
+        {% endif %}
+        <div class="d-flex d-print-flex justify-content-center">
+            <div class="d-flex d-print-flex col-5 flex-column">
+                    <b class="">C.S. GAMALIEL</b>
+                    <b>N° CNSS: 1000897400</b>
             </div>
-            <div class="col-5 bg-success">
-                Date du paiement
+            <div class="col-4 d-flex justify-content-end">
+                <span id="current_date"></span>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12 text-center">FICHE DE PAIE</div>
-            <div class="col-12 text-center">MOIS ANNEE</div>
+        <div class="row mt-4">
+            <h5 class="col-12 text-center">BULLETIN DE PAIE DU PERSONNEL MOIS DE {{ mois | upper }}</h5>
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-print-flex d-flex justify-content-center mt-5">
             <div class="col-6 ps-0">
-                <div class="row">NOM & POSTNOM</div>
-                <div class="row">PRENOM</div>
-                <div class="row">SEXE: M   ETAT CIVIL: Célibataire</div>
-                <div class="row">MATRICULE: GA  CONTRAT: CDI</div>
+                <div class="row">
+                    NOMS : {{ agent.nomFamille }}
+                </div>
+                <div class="row">SEXE: {{ agent.sexe }}   ETAT CIVIL: {{ agent.etatCivil.titre }}</div>
+                <div class="row">MATRICULE: {{ agent.matricule }}</div>
             </div>
             <div class="">
-                <div class="row">N° CNSS</div>
-                <div class="row">FONCTION</div>
-                <div class="row">ENGAGE(E) le</div>
-                <div class="row">ANCIENNETE</div>
+                <div class="row">N° CNSS {{ agent.numeroCnss }}</div>
+                <div class="row">FONCTION: {{ agent.fonction.titre }}</div>
+                <div class="row">ENGAGE(E) le {{ agent.debutContrat | date('d-m-Y') }}</div>
             </div>
         </div>
-        <div class="d-print-flex d-flex justify-content-center">
+        <div class="d-print-flex d-flex justify-content-center mt-4">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="fs-6">
                     <tr>
-                        <th scope="col" >RUBRIQUES</th>
-                        <th scope="col">TEMPS / BASE</th>
-                        <th scope="col">TAUX</th>
-                        <th scope="col">SALAIRE BRUT</th>
+                        <th scope="col" >GAINS</th>
+                        <th scope="col">MONTANT</th>
                         <th scope="col">DEDUCTION</th>
-                        <th scope="col">SALAIRE NET</th>
+                        <th scope="col">MONTANT</th>
                     </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>SALAIRE DE BASE</td>
-                            <td>22</td>
-                            <td>2300</td>
-                            <td>20000</td>
+                            <td>I. REMUNERATIONS</td>
                             <td></td>
-                            <td ></td>
+                            <td>CNSS</td>
+                            <td>{{ bulletin.cnss | number_format }}</td>
                         </tr>
                         <tr>
-                            <td>PRIME DIPLOME</td>
-                            <td></td>
-                            <td></td>
-                            <td>20000</td>
-                            <td></td>
-                            <td></td>
+                            <td>Salaire de base</td>
+                            <td>{{ bulletin.base | number_format }}</td>
+                            <td>IPR</td>
+                            <td>{{ bulletin.ipr | number_format }}</td>
                         </tr>
                         <tr>
-                            <td>HEURES SUPPLEMENTAIRES</td>
-                            <td>22</td>
-                            <td></td>
-                            <td>2000</td>
-                            <td></td>
-                            <td></td>
+                            <td>Prime de diplôme</td>
+                            <td>{{ bulletin.primeDiplome | number_format }}</td>
+                            <td>Avance/Salaire</td>
+                            <td>{{ bulletin.avanceSalaire | number_format }}</td>
                         </tr>
                         <tr>
-                            <td>TRANSPORT</td>
-                            <td>22</td>
-                            <td></td>
-                            <td>20000</td>
-                            <td></td>
-                            <td></td>
+                            <td>Heures supplémentaires</td>
+                            <td>{{ bulletin.heureSupplementaire | number_format }}</td>
+                            <td>Prêt accordé</td>
+                            <td>{{ bulletin.pretAccorde | number_format }}</td>
                         </tr>
                         <tr>
-                            <td>LOGEMENT</td>
+                            <td>TOT. REM. BRUT. IMPOSABLES</td>
+                            <td>{{ bulletin.calculBrutImposable | number_format }}</td>
+                            <td>Prêt frais scolaire</td>
+                            <td>{{ bulletin.pretFraisScolaire | number_format }}</td>
+                        </tr>
+                        <tr>
+                            <td>II. INDEMNITES DIVERS</td>
                             <td></td>
-                            <td></td>
-                            <td>20000</td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>ALLOCATION FAMILIALE</td>
-                            <td></td>
-                            <td></td>
-                            <td>20000</td>
+                            <td>Indemnités de transport</td>
+                            <td>{{ bulletin.transport | number_format }}</td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>AUTRES</td>
-                            <td></td>
-                            <td></td>
-                            <td>20000</td>
+                            <td>Indemnités de logement</td>
+                            <td>{{ bulletin.logement | number_format }}</td>
                             <td></td>
                             <td></td>
                         </tr>
-
                         <tr>
-                            <td>DEDUCTION INSS</td>
+                            <td>Allocation familiale</td>
+                            <td>{{ bulletin.allocationFamiliale | number_format }}</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>1000</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>DEDUCTION IPR</td>
+                            <td>Autres</td>
+                            <td>{{ bulletin.autres | number_format }}</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>1000</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>DEDUCTION AVANCE SALAIRE</td>
+                            <td>TOT. INDEM. DIVERS</td>
+                            <td>{{ bulletin.calculTotalIndemnite | number_format }}</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>1000</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>DEDUCTION PRET LOGEMENT</td>
+                            <td>III. TOTAL GAINS</td>
+                            <td>{{ bulletin.calculSalaireBrut | number_format }}</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>1000</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>DEDUCTION PRET FRAIS SCOLAIRE</td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td>1000</td>
-                            <td></td>
+                            <td>TOTAL DEDUCTIONS</td>
+                            <td>{{ bulletin.calculDeduction | number_format }}</td>
                         </tr>
                         <tr>
-                            <td>DEDUCTION PRET DEUIL</td>
+                            <td>IV. MONTANT NET A PAYER</td>
+                            <td>{{ bulletin.calculNetAPayer | number_format }}</td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td>1000</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>DEDUCTION PRET AUTRES</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>1000</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>DEDUCTION ABSCENCE</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>1000</td>
-                            <td></td>
-                        </tr>
-
-                        <tr>
-                            <td>TOTAL</td>
-                            <td></td>
-                            <td></td>
-                            <td>100 000</td>
-                            <td>100 000</td>
-                            <td>200 000</td>
                         </tr>
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-end me-5">
+                <div class="d-flex justify-content-end">Pour Acquit</div>
+                <div class="d-flex justify-content-between">
+                    <div>Sceau de la Caisse</div>
+                    <div>Nom et Signature</div>
+                </div>
+                <div class="d-flex justify-content-end me-5 mt-5">
                     {{ codebar | raw }}
                 </div>
             </div>
@@ -191,6 +168,18 @@
 {% endblock %}
 
 {% block extra_javascripts %}
+<script>
+    const months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+    const d = new Date()
+    const fullDate = d.getDate() +'/'+ months[d.getMonth()] +'/'+ d.getFullYear()
+    document.getElementById("current_date").innerHTML = 'Kinshasa, le '+ fullDate;
 
+    window.print()
+
+    window.onafterprint = function (evt) {
+       window.location.href = '/bulletin'
+    }
+
+</script>
 
 {% endblock %}
