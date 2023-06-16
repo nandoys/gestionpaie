@@ -277,14 +277,14 @@ class PaiementController extends AbstractController
 
             if ($pretFraisScolaire !== NULL) {
                 $pretFraisScolaire->cloturer();
-                $paiement->addPret($pretLogement);
+                $paiement->addPret($pretFraisScolaire);
             }
 
             $pretDeuil = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Deuil');
 
             if ($pretDeuil !== NULL) {
                 $pretDeuil->cloturer();
-                $paiement->addPret($pretLogement);
+                $paiement->addPret($pretDeuil);
             }
 
             $pretAutres = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Autres');
@@ -292,7 +292,7 @@ class PaiementController extends AbstractController
             if ($pretAutres !== NULL) {
 
                 $pretAutres->cloturer();
-                $paiement->addPret($pretLogement);
+                $paiement->addPret($pretAutres);
             }
 
             if ($paiement->getId() === NULL ) {

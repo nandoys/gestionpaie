@@ -67,7 +67,7 @@ class Agent
     ]
     private ?string $prenom = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Assert\NotBlank(message:"La date de naissance est obligatoire")]
     #[Assert\Type(type:"\DateTime", message:"La valeur n'est pas une date au format valide")]
     private ?\DateTimeInterface $dateNaissance = null;
@@ -94,7 +94,7 @@ class Agent
     ]
     private ?\DateTimeInterface $finContrat = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[
         Assert\NotBlank(message:"Le matricule est obligatoire"),
     ]
@@ -107,7 +107,7 @@ class Agent
     ]
     private ?string $sexe = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[
         Assert\NotBlank(message:"Le numéro CNSS est obligatoire"),
         Assert\NotNull(message:"Le numéro CNSS ne peut pas être null")
