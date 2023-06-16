@@ -9,9 +9,10 @@
 
             {{ encore_entry_link_tags('app') }}
                 <link href="{{ asset('css/font_bootstrap-icons.css') }}" rel="stylesheet">
-                <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-                <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-                <link href="{{ asset('css/bootstrap-datepicker.standalone.css') }}" rel="stylesheet">
+                <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+                <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet" media="screen">
+                <link href="{{ asset('css/bootstrap-datepicker.standalone.css') }}" rel="stylesheet" media="screen">
+                <link href="{{ asset('css/print.css') }}" rel="stylesheet" media="print">
         {% endblock %}
 
         {% block javascripts %}
@@ -23,7 +24,7 @@
         {% endblock %}
     </head>
     <body>
-        <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+        <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle d-print-none">
             <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (light)">
                 <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#sun-fill"></use></svg>
                 <span class="visually-hidden" id="bd-theme-text">CS Gamaliel</span>
@@ -66,12 +67,12 @@
                 </div>
             </div>
         </header>
-        <div id="resultat-recherche" class="position-absolute rounded shadow z-1 opacity-100 bg-white" style="margin-left: 17%; width: 72%"></div>
+        <div id="resultat-recherche" class="position-absolute rounded shadow z-1 opacity-100 bg-white d-print-none" style="margin-left: 17%; width: 72%"></div>
 
         <div class="container-fluid">
             <div class="row">
                 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse d-print-none">
-                <div class="position-sticky pt-3 sidebar-sticky">
+                <div class="position-sticky pt-3 sidebar-sticky d-print-none">
                     <ul class="nav flex-column">
 
                         <li class="nav-item">

@@ -31,5 +31,6 @@ class RemunerationType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Remuneration::class,
         ]);
+
     }
 }

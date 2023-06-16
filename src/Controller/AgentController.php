@@ -20,6 +20,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -28,9 +31,20 @@ class AgentController extends AbstractController
 
     public function __construct(private EntityManagerInterface $em) {}
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route('/', name: 'home_index')]
-    public function index(): Response
+    public function index(MailerInterface $mailer): Response
     {
+        $email = new Email();
+
+        $email->from("trustholding.drc@gmail.com")
+            ->to('grnandoy@gmail.com')
+            ->subject('hello symfony')
+            ->html('<p>some</p>');
+
+        $mailer->send($email);
         return $this->redirectToRoute('agent_liste');
     }
 
