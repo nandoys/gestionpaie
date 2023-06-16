@@ -47,10 +47,11 @@
     }
     table {
         border-collapse: collapse;
+        border: #000 1px solid;
     }
 
     th, td {
-        border: #0a3622 1px solid;
+        border: #000 1px solid;
         padding: 3px;
     }
 }
