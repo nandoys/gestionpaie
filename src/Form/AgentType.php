@@ -45,7 +45,7 @@ class AgentType extends AbstractType
             ])
             ->add('matricule')
 
-            ->add('numeroCnss')
+            ->add('numeroCnss', null)
             ->add('nombreEnfant', null, [
                 'attr'=>['min'=>0]
             ])

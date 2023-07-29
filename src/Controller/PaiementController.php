@@ -259,11 +259,13 @@ class PaiementController extends AbstractController
 
         if ($form_paie->isSubmitted() && $form_paie->isValid()) {
 
-            $avance = $this->repoAvance->findFirstUnpaidAvanceSalaire($paiement->getAgent());
+            $avance = $this->repoAvance->findUnpaidAvanceSalaire($paiement->getAgent(), $paiement->getDateAt());
 
             if ($avance !== NULL) {
-                $avance->cloturer();
-                $paiement->addAvance($avance);
+                foreach ($avance as $key => $value) {
+                    $value->cloturer();
+                    $paiement->addAvance($value);
+                }
             }
 
             $pretLogement = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Logement');

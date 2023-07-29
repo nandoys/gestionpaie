@@ -25,10 +25,15 @@ class PaieEventSubscriber implements EventSubscriberInterface
 
         $paiement = $event->getData();
 
-        $avance = $this->repoAvance->findFirstUnpaidAvanceSalaire($paiement->getAgent());
+        $avance = $this->repoAvance->findUnpaidAvanceSalaire($paiement->getAgent(), $paiement->getDateAt());
 
         if ($avance !== NULL && $paiement->getId() === NULL) {
-            $paiement->setAvanceSalaire($avance->calculDueMensuel());
+            $total_montant = 0;
+            foreach ($avance as $key => $value) {
+                $total_montant += $value->getMontant();
+            }
+            
+            $paiement->setAvanceSalaire($total_montant);
         }
 
         $pretLogement = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Logement');
@@ -55,12 +60,7 @@ class PaieEventSubscriber implements EventSubscriberInterface
             $paiement->setPretAutre($pretAutres->calculDueMensuel());
         }
 
-        if ($paiement->getId() === NULL){
-            $deducteur = new DeducteurSalaire($this->repoPaie, $paiement);
-        } else {
-            $deducteur = new DeducteurSalaire($this->repoPaie, $paiement, $paiement->getId());
-        }
-        $deducteur->deduire();
+        
 
     }
 }

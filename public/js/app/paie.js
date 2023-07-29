@@ -7,7 +7,7 @@ var toast_notification_body = $('#notification-body')
 
 // champs sur la rémuneration
 var paiement_net = $('#paiement_net')
-var paiement_deduction = $('#paiement_precedente_deduction')
+var paiement_deduction = $('#paiement_deduction')
 
 var paiement_base = $('#paiement_base')
 var paiement_prime_diplome = $('#paiement_primeDiplome')
@@ -73,40 +73,11 @@ function calculDeduction(selector) {
 
     selector = $(`#${selector.target.id}`)
 
-    console.log(selector.attr('data-deducted'))
 
     deductions.forEach(deduction => {
 
-        /* vérifier si le montant a déjà été déduit pour le sauter dans le calcul,
-         * parce que cela fait partie du montant déduit précédemment
-
-        if(parseFloat(selector.attr('data-deducted')) === 0) {
-            if(deduction.attr('id') !== 'paiement_precedente_deduction') {
-                result += parseFloat(deduction.val())
-            }
-        } else {
-            const montantDeduit = parseFloat(selector.attr('data-deducted'))
-            const montantADeduire = parseFloat(selector.val())
-
-            if(deduction.attr('id') === 'paiement_precedente_deduction') {
-                let montantDeduction = parseFloat(deduction.attr('data-deduction'))
-
-                if (montantDeduit > montantADeduire) {
-                    const difference = montantDeduit - montantADeduire
-                    montantDeduction -= difference
-                }
-                else {
-                    const addition =  montantADeduire - montantDeduit
-                    montantDeduction += addition
-                }
-                deduction.attr('data-deduction-update', montantDeduction)
-                deduction.text(`${montantDeduction.toLocaleString()} FC`)
-
-                result += montantDeduction
-            }
-        }
-        */
         result += parseFloat(deduction.val())
+        
     })
 
     return result
@@ -136,6 +107,7 @@ function calculNetAPayer(selector) {
 function setData(selector) {
 
     const salaireNet = calculNetAPayer(selector)
+    const deductions = calculDeduction(selector)
 
     if (paiement_date.val() === '') {
         /**
@@ -153,8 +125,8 @@ function setData(selector) {
         return
     }
 
-    salaireNet !== undefined ? $('#paiement_net').text(`${salaireNet.toLocaleString()} FC`) : $('#paiement_net').text(`??? FC`)
-
+    salaireNet !== undefined ? paiement_net.text(`${salaireNet.toLocaleString()} FC`) : paiement_net.text(`??? FC`)
+    deductions !== undefined ? paiement_deduction.text(`${deductions.toLocaleString()} FC`) : paiement_deduction.text(`??? FC`)
 }
 
 /**

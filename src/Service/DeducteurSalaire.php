@@ -17,14 +17,14 @@ class DeducteurSalaire
 
     public function deduire() : void
     {
-        $deductionsPrecedentes = 0;
+        // $deductionsPrecedentes = 0;
 
-        foreach ($this->paiementsExistants as $paiementExistant)
-        {
-            $deductionsPrecedentes += $paiementExistant->calculDeduction();
-        }
+        // foreach ($this->paiementsExistants as $paiementExistant)
+        // {
+        //     $deductionsPrecedentes += $paiementExistant->calculDeduction();
+        // }
 
-        $this->paiement->setDeductionPrecedente($deductionsPrecedentes);
+        // $this->paiement->setDeductionPrecedente($deductionsPrecedentes);
 
     }
 }

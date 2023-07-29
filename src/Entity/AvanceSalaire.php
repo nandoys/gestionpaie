@@ -25,9 +25,6 @@ class AvanceSalaire
     #[Assert\Positive(message:"Le montant doit être supérieur à zéro")]
     private ?float $montant = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    #[Assert\Positive(message:"La mensulaité doit être supérieur à zéro")]
-    private ?int $mensualite = null;
 
     #[ORM\ManyToOne(inversedBy: 'avanceSalaires')]
     #[ORM\JoinColumn(nullable: false)]
@@ -66,18 +63,6 @@ class AvanceSalaire
     public function setMontant(float $montant): self
     {
         $this->montant = $montant;
-
-        return $this;
-    }
-
-    public function getMensualite(): ?int
-    {
-        return $this->mensualite;
-    }
-
-    public function setMensualite(int $mensualite): self
-    {
-        $this->mensualite = $mensualite;
 
         return $this;
     }
@@ -154,14 +139,8 @@ class AvanceSalaire
         return $this;
     }
 
-    public function calculDueMensuel() {
-        return $this->montant / $this->mensualite;
-    }
-
     public function cloturer() {
-        if ($this->mensualite == $this->paiements->count() + 1) {
-            $this->estCloture = true;
-        }
+        $this->estCloture = true;
         return $this;
     }
 }

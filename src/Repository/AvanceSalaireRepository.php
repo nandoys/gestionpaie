@@ -44,39 +44,15 @@ class AvanceSalaireRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findFirstUnpaidAvanceSalaire(Agent $agent) {
+    public function findUnpaidAvanceSalaire(Agent $agent, \DateTimeInterface $dateAt) {
+ 
         return $this->createQueryBuilder('a')
-            ->andWhere('a.dateAt = (SELECT MIN(a2.dateAt) FROM App\Entity\AvanceSalaire a2 where a2.estCloture = false and a2.agent = :agent)')
+            ->andWhere('a.dateAt < :dateAt')
             ->andWhere('a.estCloture = false')
             ->andWhere('a.agent = :agent')
-            ->setParameters(['agent'=>$agent])
+            ->setParameters(['agent'=>$agent, 'dateAt'=>$dateAt->format('Y-m-d')])
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
 
     }
-
-//    /**
-//     * @return AvanceSalaire[] Returns an array of AvanceSalaire objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?AvanceSalaire
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

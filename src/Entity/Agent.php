@@ -249,7 +249,7 @@ class Agent
         return $this->matricule;
     }
 
-    public function setMatricule(string $matricule): self
+    public function setMatricule(?string $matricule): self
     {
         $this->matricule = $matricule;
 
@@ -273,7 +273,7 @@ class Agent
         return $this->numeroCnss;
     }
 
-    public function setNumeroCnss(string $numeroCnss): self
+    public function setNumeroCnss(?string $numeroCnss): self
     {
         $this->numeroCnss = $numeroCnss;
 

@@ -100,7 +100,6 @@ class Paiement
     #[ORM\Column(nullable: true)]
     #[Groups('read:paiements')]
     private ?float $abscence = null;
-    private int $deductionPrecedente = 0;
 
     #[ORM\ManyToMany(targetEntity: AvanceSalaire::class, mappedBy: 'paiements')]
     private Collection $avances;
@@ -337,21 +336,6 @@ class Paiement
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getDeductionPrecedente(): int
-    {
-        return $this->deductionPrecedente;
-    }
-
-    /**
-     * @param int $deductionPrecedente
-     */
-    public function setDeductionPrecedente(int $deductionPrecedente): void
-    {
-        $this->deductionPrecedente = $deductionPrecedente;
-    }
 
     public function getAgent(): ?Agent
     {
@@ -386,8 +370,8 @@ class Paiement
     public function calculDeduction() : ?float
     {
         $deductions = array($this->cnss, $this->ipr, $this->avanceSalaire, $this->pretLogement, $this->pretFraisScolaire, 
-        $this->pretDeuil, $this->pretAutre,  $this->abscence, $this->deductionPrecedente);
-
+        $this->pretDeuil, $this->pretAutre,  $this->abscence);
+        
         return array_sum($deductions);
     }
 
@@ -473,13 +457,12 @@ class Paiement
     #[Assert\Callback()]
     public function validateAvance(ExecutionContextInterface $context, $payload): void
     {
-        $avance = $this->em->getRepository(AvanceSalaire::class)->findFirstUnpaidAvanceSalaire($this->agent);
-
-        if ($avance !== NULL &&  $avance->calculDueMensuel() !== $this->avanceSalaire) {
-            $context->buildViolation("Le montant n'est pas égal à la mensualité à payer! dû {$avance->calculDueMensuel()} FC")
-                ->atPath('avanceSalaire')
-                ->addViolation();
+        $avance = $this->em->getRepository(AvanceSalaire::class)->findUnpaidAvanceSalaire($this->agent, $this->getDateAt());
+        $total_montant = 0;
+        foreach ($avance as $key => $value) {
+            $total_montant += $value->getMontant();
         }
+
     }
 
 }

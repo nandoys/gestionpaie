@@ -38,7 +38,6 @@
                                                 <tr>
                                                     <th scope="col">{{ knp_pagination_sortable(avancesSalaire, 'Date de paiement', 'dateAt') }}</th>
                                                     <th scope="col">Montant</th>
-                                                    <th scope="col">Mensualité</th>
                                                     <th scope="col">Mois reglé</th>
                                                     <th scope="col">Status</th>
                                                 </tr>
@@ -48,14 +47,6 @@
                                                 <tr>
                                                     <td>{{ avance.dateAt | date('d/m/Y') }}</td>
                                                     <td>{{ avance.montant | number_format }} FC</td>
-                                                    <td>{{ avance.mensualite }}</td>
-                                                    <td>
-                                                        {% if avance.paiements | length > 0  %}
-                                                            {{ avance.paiements | length  }}
-                                                        {% else %}
-                                                            <span class="badge text-bg-info">Aucun</span>
-                                                        {% endif %}
-                                                    </td>
                                                     <td>
                                                         {% if avance.estCloture == false  %}
                                                             {% if avance.paiements | length == 0  %}
@@ -108,12 +99,6 @@
                                         {{ form_widget(form_avance.montant) }}
                                         <div class="invalid-feedback error-avance mb-2">
                                             {{ form_errors(form_avance.montant) }}
-                                        </div>
-
-                                        {{ form_label(form_avance.mensualite, 'Modalité mensuelle', {label_attr: {class: 'mt-2'} }) }}
-                                        {{ form_widget(form_avance.mensualite) }}
-                                        <div class="invalid-feedback error-avance mb-2">
-                                            {{ form_errors(form_avance.mensualite) }}
                                         </div>
 
                                         <div class="col d-grid gap-2 mt-3">

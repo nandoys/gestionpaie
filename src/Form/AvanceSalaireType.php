@@ -20,9 +20,6 @@ class AvanceSalaireType extends AbstractType
             ->add('montant', null, [
                 'attr' => ['placeholder' => "Montant de l'avance"]
             ])
-            ->add('mensualite', null, [
-                'attr' => ['placeholder' => 'Modalité de déduction']
-            ])
         ;
     }
 
