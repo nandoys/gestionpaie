@@ -147,7 +147,7 @@ class PaiementController extends AbstractController
         $formUpload = $this->createForm(ImportFileType::class);
 
         $paiements = $this->paginator->paginate(
-            $this->repoPaie->findByAgent($agent),
+            $this->repoPaie->findByAgent($agent, ['dateAt' => 'DESC']),
             $request->query->getInt('page', 1),
             10 /*limit per page*/
         );

@@ -17,7 +17,7 @@ class DateRange
         $finAnnee = (int) $fin->format('Y');
 
         for ($annee = $debutAnnee; $annee <= $finAnnee; $annee++) {
-            for ($mois = 1; $mois <= 12; $mois++) {
+            for ($mois = 12; $mois >= 1; $mois--) {
                 if ($annee === $debutAnnee && $mois >= $debutMois || $annee === $finAnnee && $mois <= $finMois) {
                     $this->months[] = ['mois' => $mois, 'annee' => $annee];
                 }

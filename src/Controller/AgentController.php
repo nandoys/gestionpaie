@@ -64,14 +64,12 @@ class AgentController extends AbstractController
         if(!$is_creating_agent) { 
 
             if ($agent->getRemuneration() === NULL) {
-                # code...
                 $remuneration = new Remuneration();
             } else {
                 $remuneration = $repoRemuneration->findOneBy(['agent' => $agent]);
             }
 
             if ($agent->getIndemnite() === NULL) {
-                # code ..
                 $indemnite = new Indemnite();
             } else {
                 $indemnite = $repoIndem->findOneBy(['agent' => $agent]);
@@ -83,12 +81,8 @@ class AgentController extends AbstractController
             $indemnite = new Indemnite();
         }
 
-        
-        // get all agents
-        //$agents = $repo->findAll();
-
         $agents = $paginator->paginate(
-            $repoAgent->findAll(), 
+            $repoAgent->findBy([], ['nom' => 'ASC']), 
             $request->query->getInt('page', 1),
             10 /*limit per page*/
         );
@@ -126,12 +120,10 @@ class AgentController extends AbstractController
                 $this->addFlash('success', "Vous venez d'ajouter un nouvel agent {$agent->getNomComplet()} (Matricule: {$agent->getMatricule()})"); 
             } else {
                 if ($agent->getRemuneration() === NULL) {
-                    # code...
                     $agent->setRemuneration($remuneration);
                 } 
     
                 if ($agent->getIndemnite() === NULL) {
-                    # code ..
                     $agent->setIndemnite($indemnite);
                 }
 
