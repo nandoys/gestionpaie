@@ -30,15 +30,7 @@ class SecurityController extends AbstractController
         $config->createIfNoMaritalStatus();
         $config->createIfNoUser();
 
-       // last username entered by the user
-       $lastUsername = $authenticationUtils->getLastUsername();
-
-       if($lastUsername) {
-          return $this->redirectToRoute('home_index');
-       }
-
         return $this->render('auth/login.html.twig', [
-                'last_username' => $lastUsername,
                 'error'         => $error
             ]
         );
