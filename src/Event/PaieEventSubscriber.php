@@ -36,31 +36,54 @@ class PaieEventSubscriber implements EventSubscriberInterface
             $paiement->setAvanceSalaire($total_montant);
         }
 
-        $pretLogement = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Logement');
+        $pretLogement = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Logement', $paiement->getDateAt());
 
         if ($pretLogement !== NULL && $paiement->getId() === NULL) {
-            $paiement->setPretLogement($pretLogement->calculDueMensuel());
+            $prets = array();
+
+            foreach ($pretLogement as $pret) {
+                $prets[] = $pret->calculDueMensuel();
+            }
+
+            $paiement->setPretLogement(array_sum($prets));
         }
 
-        $pretFraisScolaire = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Frais scolaire');
+        $pretFraisScolaire = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Frais scolaire', $paiement->getDateAt());
 
         if ($pretFraisScolaire !== NULL && $paiement->getId() === NULL) {
-            $paiement->setPretFraisScolaire($pretFraisScolaire->calculDueMensuel());
+            
+            $prets = array();
+
+            foreach ($pretFraisScolaire as $pret) {
+                $prets[] = $pret->calculDueMensuel();
+            }
+
+            $paiement->setPretFraisScolaire(array_sum($prets));
         }
 
-        $pretDeuil = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Deuil');
+        $pretDeuil = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Deuil', $paiement->getDateAt());
 
         if ($pretDeuil !== NULL && $paiement->getId() === NULL) {
-            $paiement->setPretDeuil($pretDeuil->calculDueMensuel());
+            $prets = array();
+
+            foreach ($pretDeuil as $pret) {
+                $prets[] = $pret->calculDueMensuel();
+            }
+
+            $paiement->setPretDeuil(array_sum($prets));
         }
 
-        $pretAutres = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Autres');
+        $pretAutres = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Autres', $paiement->getDateAt());
 
         if ($pretAutres !== NULL && $paiement->getId() === NULL) {
-            $paiement->setPretAutre($pretAutres->calculDueMensuel());
-        }
+            $prets = array();
 
-        
+            foreach ($pretAutres as $pret) {
+                $prets[] = $pret->calculDueMensuel();
+            }
+
+            $paiement->setPretAutre(array_sum($prets));
+        }
 
     }
 }

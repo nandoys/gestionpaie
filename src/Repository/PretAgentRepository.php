@@ -44,15 +44,15 @@ class PretAgentRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findFirstUnpaidPret(Agent $agent, string $typePret) {
+    public function findFirstUnpaidPret(Agent $agent, string $typePret, \DateTimeInterface $dateAt) {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.dateAt = (SELECT MIN(p2.dateAt) FROM App\Entity\PretAgent p2 where p2.estCloture = false and p2.agent = :agent)')
+            ->andWhere('p.dateAt < :dateAt')
             ->andWhere('p.typePret = :typePret')
             ->andWhere('p.estCloture = false')
             ->andWhere('p.agent = :agent')
-            ->setParameters(compact('agent', 'typePret'))
+            ->setParameters(['agent'=>$agent, 'typePret'=>$typePret, 'dateAt'=>$dateAt->format('Y-m-d')])
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
 
     }
 

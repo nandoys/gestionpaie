@@ -81,6 +81,12 @@ class Exercice
         return $this;
     }
 
+    public function valide(\DateTimeInterface $date): bool
+    {
+        
+        return $this->debutAnnee <= $date && $this->finAnnee >= $date;
+    }
+
     /**
      * @return Collection<int, PretAgent>
      */

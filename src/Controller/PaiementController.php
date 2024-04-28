@@ -258,7 +258,16 @@ class PaiementController extends AbstractController
         $form_paie->handleRequest($request);
 
         if ($form_paie->isSubmitted() && $form_paie->isValid()) {
-
+            
+            if(!$exercice->valide($paiement->getDateAt())) {
+                $this->addFlash('danger', "La date du paiement est incorrecte.");
+                if ($paiement->getId() !== NULL ) {
+                    return $this->redirectToRoute('paiement_agent_update', ['id' => $agent->getId(), 'paiement_id' => $paiement->getId()]);
+                } else {
+                    return $this->redirectToRoute('paiement_agent', ['id' => $agent->getId()]);
+                }
+            }
+           
             $avance = $this->repoAvance->findUnpaidAvanceSalaire($paiement->getAgent(), $paiement->getDateAt());
 
             if ($avance !== NULL) {
@@ -268,38 +277,53 @@ class PaiementController extends AbstractController
                 }
             }
 
-            $pretLogement = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Logement');
+            $pretLogement = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Logement', $paiement->getDateAt());
 
-            if ($pretLogement !== NULL) {
-                $pretLogement->cloturer();
-                $paiement->addPret($pretLogement);
+            if (count($pretLogement) > 0) {
+                
+                foreach ($pretLogement as $pret) {
+                    $pret->cloturer();
+                    $paiement->addPret($pret);
+                }
+            } else {
+                $paiement->setPretLogement(0);
             }
 
-            $pretFraisScolaire = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Frais scolaire');
+            $pretFraisScolaire = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Frais scolaire', $paiement->getDateAt());
 
-            if ($pretFraisScolaire !== NULL) {
-                $pretFraisScolaire->cloturer();
-                $paiement->addPret($pretFraisScolaire);
+            if (count($pretFraisScolaire) > 0) {
+                foreach ($pretFraisScolaire as $pret) {
+                    $pret->cloturer();
+                    $paiement->addPret($pret);
+                }
+            } else {
+                $paiement->setPretFraisScolaire(0);
             }
 
-            $pretDeuil = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Deuil');
+            $pretDeuil = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Deuil', $paiement->getDateAt());
 
-            if ($pretDeuil !== NULL) {
-                $pretDeuil->cloturer();
-                $paiement->addPret($pretDeuil);
+            if (count($pretDeuil) > 0) {
+                foreach ($pretDeuil as $pret) {
+                    $pret->cloturer();
+                    $paiement->addPret($pret);
+                }
+            } else {
+                $paiement->setPretDeuil(0);
             }
 
-            $pretAutres = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Autres');
+            $pretAutres = $this->repoPret->findFirstUnpaidPret($paiement->getAgent(), 'Autres', $paiement->getDateAt());
 
-            if ($pretAutres !== NULL) {
-
-                $pretAutres->cloturer();
-                $paiement->addPret($pretAutres);
+            if (count($pretAutres) > 0) {
+                foreach ($pretAutres as $pret) {
+                    $pret->cloturer();
+                    $paiement->addPret($pret);
+                }
+            } else {
+                $paiement->setPretAutre(0);
             }
 
             if ($paiement->getId() === NULL ) {
                 $this->em->persist($paiement);
-
                 $this->addFlash('success', "Vous venez d'ajouter un nouveau paiement.");
             } else {
                 $this->addFlash('success', "Votre modification du paiement s'est bien éffectuée.");
