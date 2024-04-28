@@ -92,6 +92,10 @@ class Paiement
     #[Groups('read:paiements')]
     private ?float $autres = null;
 
+    #[ORM\Column]
+    #[Groups('read:paiements')]
+    private ?float $exceptionnel = null;
+
     #[ORM\ManyToOne(inversedBy: 'paiements')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups('read:paiements')]
@@ -122,6 +126,7 @@ class Paiement
         $this->logement = $indemnite->getLogement();
         $this->allocationFamiliale = $indemnite->getAllocationFamiliale();
         $this->autres = $indemnite->getAutres();
+        $this->exceptionnel = $indemnite->getExceptionnel();
 
         // Déduction salariale
         $this->cnss = 0;
@@ -324,6 +329,18 @@ class Paiement
         return $this;
     }
 
+    public function getExceptionnel(): ?float
+    {
+        return $this->exceptionnel;
+    }
+
+    public function setExceptionnel(float $exceptionnel): self
+    {
+        $this->exceptionnel = $exceptionnel;
+
+        return $this;
+    }
+
     public function getAbscence(): ?float
     {
         return $this->abscence;
@@ -357,7 +374,7 @@ class Paiement
 
     public function calculTotalIndemnite() : ?float 
     {
-        $indemnites = array($this->transport, $this->logement, $this->allocationFamiliale, $this->autres);
+        $indemnites = array($this->transport, $this->logement, $this->allocationFamiliale, $this->autres, $this->exceptionnel);
         return  array_sum($indemnites);
     }
 

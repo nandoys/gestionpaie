@@ -42,25 +42,14 @@ class PaiementType extends AbstractType
                 'widget' => 'single_text',
                 'attr' => ['min' => $options['min'], 'max' =>$options['max']],
             ])
-            ->add('base', null, [
-                'disabled' => true
-            ])
-            ->add('primeDiplome', null, [
-                'disabled' => true
-            ])
+            ->add('base', null, [])
+            ->add('primeDiplome', null, [])
             ->add('heureSupplementaire')
-            ->add('transport', null, [
-                'disabled' => true
-            ])
-            ->add('logement', null, [
-                'disabled' => true
-            ])
-            ->add('allocationFamiliale', null, [
-                'disabled' => true
-            ])
-            ->add('autres', null, [
-                'disabled' => true
-            ])
+            ->add('transport', null, [])
+            ->add('logement', null, [])
+            ->add('allocationFamiliale', null, [])
+            ->add('autres', null, [])
+            ->add('exceptionnel', null, [])
             ->addEventSubscriber($this->subscriber)
         ;
     }

@@ -62,7 +62,7 @@ class PaiementController extends AbstractController
 
         // concerne la partie avance salaire
         $avancesSalaire = $this->paginator->paginate(
-            $repoAvance->findBy(['agent' => $agent, 'exercice' => $exercice]),
+            $repoAvance->findBy(['agent' => $agent, 'exercice' => $exercice], ['dateAt' => 'DESC']),
             $request->query->getInt('page-avance-salaire', 1),
             15 /*limit per page*/
         );
@@ -104,7 +104,7 @@ class PaiementController extends AbstractController
 
         // concerne la partie de prêt
         $prets = $this->paginator->paginate(
-            $this->repoPret->findBy(['agent' => $agent, 'exercice' => $exercice]),
+            $this->repoPret->findBy(['agent' => $agent, 'exercice' => $exercice], ['dateAt' => 'DESC']),
             $request->query->getInt('page-pret', 1),
             15 /*limit per page*/
         );

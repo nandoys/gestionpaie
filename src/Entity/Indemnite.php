@@ -25,6 +25,9 @@ class Indemnite
     #[ORM\Column]
     private ?float $autres = null;
 
+    #[ORM\Column]
+    private ?float $exceptionnel = null;
+
     #[ORM\OneToOne(inversedBy: 'indemnite', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Agent $agent = null;
@@ -82,6 +85,18 @@ class Indemnite
         return $this;
     }
 
+    public function getExceptionnel(): ?float
+    {
+        return $this->exceptionnel;
+    }
+
+    public function setExceptionnel(float $exceptionnel): self
+    {
+        $this->exceptionnel = $exceptionnel;
+
+        return $this;
+    }
+
     public function getAgent(): ?Agent
     {
         return $this->agent;
@@ -96,6 +111,6 @@ class Indemnite
 
     public function calculTotalIndemnite() 
     {
-        return $this->transport + $this->logement + $this->allocationFamiliale + $this->autres;
+        return $this->transport + $this->logement + $this->allocationFamiliale + $this->autres + $this->exceptionnel;
     }
 }

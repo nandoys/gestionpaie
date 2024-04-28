@@ -19,8 +19,8 @@ var paiement_transport = $('#paiement_transport')
 var paiement_logement = $('#paiement_logement ')
 var paiement_allocation_familiale = $('#paiement_allocationFamiliale')
 var paiement_autres = $('#paiement_autres')
-var indemnites = new Array(paiement_transport, paiement_logement, paiement_allocation_familiale, paiement_autres);
-
+var paiement_exceptionnel = $('#paiement_exceptionnel')
+var indemnites = new Array(paiement_transport, paiement_logement, paiement_allocation_familiale, paiement_autres, paiement_exceptionnel);
 
 // champs sur les déductions
 var paiement_cnss = $('#paiement_cnss')
@@ -142,6 +142,7 @@ paiement_transport.change(setData)
 paiement_logement.change(setData)
 paiement_allocation_familiale.change(setData)
 paiement_autres.change(setData)
+paiement_exceptionnel.change(setData)
 
 
 // champs sur les déductions

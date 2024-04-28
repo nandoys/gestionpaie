@@ -23,7 +23,8 @@ class DenormaliseurPaie
             $indemnite->setTransport($result['transport'])
                 ->setLogement($result['logement'])
                 ->setAllocationFamiliale($result['allocationFamiliale'])
-                ->setAutres($result['autres']);
+                ->setAutres($result['autres'])
+                ->setAutres($result['exceptionnel']);
 
             $agent = $repoAgent->find($result['agent_id']);
             $paiement = new Paiement($remuneration, $indemnite, $agent, $em);

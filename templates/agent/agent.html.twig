@@ -231,6 +231,13 @@
                                   {{ form_errors(form_agent_salaire.indemnite.autres) }}
                                   </div>
                               </div>
+                              <div class="col-6">
+                                <label for="agent_salaire_indemnite_exceptionnel" class="h5 form-label col-form-label col-form-label-sm">{{ form_label(form_agent_salaire.indemnite.exceptionnel) }}</label>
+                                {{ form_widget(form_agent_salaire.indemnite.exceptionnel, {'attr': {'placeholder':"Indemnité exceptionnelle de l'agent"}}) }}
+                                <div class="invalid-feedback" data-tab="v-pills-salaire-tab">
+                                {{ form_errors(form_agent_salaire.indemnite.exceptionnel) }}
+                                </div>
+                              </div>
                             </div>
                           </div>  
                         </div>

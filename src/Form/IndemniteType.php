@@ -16,6 +16,7 @@ class IndemniteType extends AbstractType
             ->add('logement')
             ->add('allocationFamiliale')
             ->add('autres')
+            ->add('exceptionnel')
         ;
     }
 

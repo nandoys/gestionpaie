@@ -154,6 +154,13 @@
                                             {{ form_errors(form_paie.autres) }}
                                         </div>
                                     </div>
+                                    <div class="col">
+                                        {{ form_label(form_paie.exceptionnel, null, {'label_attr': {'class': 'h5 form-label col-form-label col-form-label-sm'}}) }}
+                                        {{ form_widget(form_paie.exceptionnel, {'attr': {'placeholder':"Motant indemnité exceptionnelle"}}) }}
+                                        <div class="invalid-feedback">
+                                            {{ form_errors(form_paie.exceptionnel) }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                     </div>
