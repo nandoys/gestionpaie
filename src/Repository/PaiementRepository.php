@@ -56,11 +56,12 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            a.id AS agent_id')
+            SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
             ->where('p.dateAt >= :debutDate')
             ->andWhere('p.dateAt <= :finDate')
             ->setParameters(compact('debutDate', 'finDate'))
             ->groupBy('p.agent')
+            ->orderBy('a.nom', 'ASC')
             ->join('p.agent', 'a')
             ->getQuery()
             ->getResult();
@@ -72,11 +73,12 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            a.id AS agent_id')
+            SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
             ->where('MONTH(p.dateAt) >= :debutMois AND YEAR(p.dateAt) = :debutAnnee')
             ->andWhere('MONTH(p.dateAt) <= :finMois AND YEAR(p.dateAt) = :finAnnee')
             ->setParameters(compact('debutMois', 'debutAnnee', 'finMois', 'finAnnee'))
             ->groupBy('p.agent')
+            ->orderBy('a.nom', 'ASC')
             ->join('p.agent', 'a')
             ->getQuery()
             ->getResult();
@@ -88,10 +90,11 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            a.id AS agent_id')
+            SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
             ->where('MONTH(p.dateAt) = :month')
             ->setParameters(compact('month'))
             ->groupBy('p.agent')
+            ->orderBy('a.nom', 'ASC')
             ->join('p.agent', 'a')
             ->getQuery()
             ->getResult();
@@ -103,12 +106,13 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            a.id AS agent_id')
+            SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
             ->where('MONTH(p.dateAt) = :month')
             ->andWhere('YEAR(p.dateAt) = :annee')
             ->andWhere('p.agent = :agent')
             ->setParameters(compact('month', 'annee', 'agent'))
             ->groupBy('p.agent')
+            ->orderBy('a.nom', 'ASC')
             ->join('p.agent', 'a')
             ->getQuery()
             ->getResult();
@@ -119,11 +123,12 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            a.id AS agent_id')
+            SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
             ->where('MONTH(p.dateAt) = :month')
             ->andWhere('YEAR(p.dateAt) = :year')
             ->setParameters(compact('month', 'year'))
             ->groupBy('p.agent')
+            ->orderBy('a.nom', 'ASC')
             ->join('p.agent', 'a')
             ->getQuery()
             ->getResult();

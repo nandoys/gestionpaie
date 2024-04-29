@@ -93,8 +93,26 @@ class RapportController extends AbstractController
             $is_filter_year = false;
         }
 
+        // sous total
+        $totalBrutImposable = 0;
+        $totalIndemnite = 0;
+        $totalSalaireBrut = 0;
+        $totalDeduction = 0;
+        $totalNetAPayer = 0;
+
+        foreach ($paiements->getItems() as $paie) {
+            $totalBrutImposable += $paie->calculBrutImposable();
+            $totalIndemnite += $paie->calculTotalIndemnite();
+            $totalSalaireBrut += $paie->calculSalaireBrut();
+            $totalDeduction += $paie->calculDeduction();
+            $totalNetAPayer += $paie->calculNetAPayer();
+        }
+        
+        $sous_totaux = compact('totalBrutImposable', 'totalIndemnite', 'totalSalaireBrut', 'totalDeduction', 'totalNetAPayer');
+
         return $this->render('rapport/index.twig', [
             'paiements' => $paiements,
+            'sous_totaux' => $sous_totaux,
             'paiementsTrimestriel' => $paiementsTrimestriel,
             'minMoisFiltre' => $exercice->getDebutAnnee()->format('Y-m'),
             'maxMoisFiltre' => $exercice->getFinAnnee()->format('Y-m'),

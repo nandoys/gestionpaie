@@ -20,11 +20,12 @@ class DenormaliseurPaie
                 ->setHeureSupplementaire($result['heureSupplementaire']);
 
             $indemnite = new Indemnite();
+
             $indemnite->setTransport($result['transport'])
                 ->setLogement($result['logement'])
                 ->setAllocationFamiliale($result['allocationFamiliale'])
                 ->setAutres($result['autres'])
-                ->setAutres($result['exceptionnel']);
+                ->setExceptionnel($result['exceptionnel']);
 
             $agent = $repoAgent->find($result['agent_id']);
             $paiement = new Paiement($remuneration, $indemnite, $agent, $em);

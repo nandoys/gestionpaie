@@ -56,6 +56,16 @@
                     </tr>
                 {%endfor%}
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Sous total</th>
+                        <th>{{ sous_totaux.totalBrutImposable | number_format }} FC</th>
+                        <th>{{ sous_totaux.totalIndemnite | number_format }} FC</th>
+                        <th>{{ sous_totaux.totalSalaireBrut | number_format }} FC</th>
+                        <th>{{ sous_totaux.totalDeduction | number_format }} FC</th>
+                        <th>{{ sous_totaux.totalNetAPayer | number_format }} FC</th>
+                    </tr>
+                </tfoot>
             </table>
             <div>
                 <nav aria-label="Page navigation">
