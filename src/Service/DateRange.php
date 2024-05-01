@@ -20,6 +20,7 @@ class DateRange
             for ($mois = 12; $mois >= 1; $mois--) {
                 if ($annee === $debutAnnee && $mois >= $debutMois || $annee === $finAnnee && $mois <= $finMois) {
                     $this->months[] = ['mois' => $mois, 'annee' => $annee];
+                    dump($annee, $debutAnnee, $mois);
                 }
                 else if ($annee > $debutAnnee && $annee < $finAnnee) {
                     $this->months[] = ['mois' => $mois, 'annee' => $annee];
