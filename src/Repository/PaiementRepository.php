@@ -84,22 +84,23 @@ class PaiementRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findMonthNetPaymentGroupByAgent($month) {
+    public function findMonthNetPaymentGroupByAgent($mois, $annee) {
         return $this->createQueryBuilder('p')
             ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
             SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
-            ->where('MONTH(p.dateAt) = :month')
-            ->setParameters(compact('month'))
+            ->where('MONTH(p.dateAt) = :mois')
+            ->andWhere('YEAR(p.dateAt) = :annee')
+            ->setParameters(compact('mois', 'annee'))
             ->groupBy('p.agent')
             ->orderBy('a.nom', 'ASC')
             ->join('p.agent', 'a')
             ->getQuery()
             ->getResult();
     }
-
+    /*
     public function findPaymentBill($month, $annee, Agent $agent) {
         return $this->createQueryBuilder('p')
             ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
@@ -117,6 +118,7 @@ class PaiementRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    */
     public function findAllPaymentBill($month, $year) {
         return $this->createQueryBuilder('p')
             ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,

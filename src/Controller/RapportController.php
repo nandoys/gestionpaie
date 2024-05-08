@@ -43,7 +43,6 @@ class RapportController extends AbstractController
         $dateRange->getMonthsInRange($exercice->getDebutAnnee(), $exercice->getFinAnnee());
 
         $trimestres = $dateRange->splitIntoChunks(3);
-        //dd($dateRange);
 
         $paiementsTrimestriel = [];
 
@@ -87,7 +86,9 @@ class RapportController extends AbstractController
         $formFiltreMois->handleRequest($request);
 
         if ($formFiltreMois->isSubmitted() && $formFiltreMois->isValid()) {
-            $paiementsQueryResults = $repoPaie->findMonthNetPaymentGroupByAgent($formFiltreMois->getData()['filtreMois']->format('m'));
+            $mois = $formFiltreMois->getData()['filtreMois']->format('m');
+            $annee = $formFiltreMois->getData()['filtreMois']->format('Y');
+            $paiementsQueryResults = $repoPaie->findMonthNetPaymentGroupByAgent($mois, $annee);
             $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
             $paiements = $this->paginator->paginate(
