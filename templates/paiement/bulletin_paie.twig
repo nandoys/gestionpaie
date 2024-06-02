@@ -111,8 +111,8 @@
                         <tr>
                             <td>Indemnités de logement</td>
                             <td>{{ bulletin.logement | number_format }}</td>
-                            <td></td>
-                            <td></td>
+                            <td>Abscence</td>
+                            <td>{{ bulletin.abscence | number_format }}</td>
                         </tr>
                         <tr>
                             <td>Allocation familiale</td>
@@ -123,6 +123,12 @@
                         <tr>
                             <td>Autres</td>
                             <td>{{ bulletin.autres | number_format }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Prime Exceptionnelle</td>
+                            <td>{{ bulletin.exceptionnel | number_format }}</td>
                             <td></td>
                             <td></td>
                         </tr>
