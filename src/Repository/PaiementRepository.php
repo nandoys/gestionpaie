@@ -100,7 +100,7 @@ class PaiementRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    /*
+    
     public function findPaymentBill($month, $annee, Agent $agent) {
         return $this->createQueryBuilder('p')
             ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
@@ -118,7 +118,7 @@ class PaiementRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    */
+    
     public function findAllPaymentBill($month, $year) {
         return $this->createQueryBuilder('p')
             ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
