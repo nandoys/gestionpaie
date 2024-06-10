@@ -55,14 +55,15 @@ class RapportController extends AbstractController
 
             $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
-            if($i == count($trimestres) - 1) {
-                //dd($paiements);
+            $count = 10;
+            if(count($paiements->getDenormalizedData()) > 0) {
+                $count = count($paiements->getDenormalizedData());
             }
 
             $paginator = $this->paginator->paginate(
                 $paiements->getDenormalizedData(),
                 $request->query->getInt('page-trimestre-'.$i +1, 1),
-                10);
+                $count);
 
             $paginator->setPaginatorOptions(['pageParameterName' => 'page-trimestre-'.$i +1]);
 
@@ -73,10 +74,15 @@ class RapportController extends AbstractController
 
         $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
+        $count = 10;
+        if(count($paiements->getDenormalizedData()) > 0) {
+            $count = count($paiements->getDenormalizedData());
+        }
+
         $paiements = $this->paginator->paginate(
             $paiements->getDenormalizedData(),
             $request->query->getInt('page', 1),
-            10);
+            $count);
 
         $formFiltreMois = $this->createForm(FiltreMoisType::class, null, [
             'minMoisFiltre' =>  $exercice->getDebutAnnee()->format('m-Y'),
@@ -90,13 +96,19 @@ class RapportController extends AbstractController
             $annee = $formFiltreMois->getData()['filtreMois']->format('Y');
             $paiementsQueryResults = $repoPaie->findMonthNetPaymentGroupByAgent($mois, $annee);
             $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
+            
+            $count = 10;
+            if(count($paiements->getDenormalizedData()) > 0) {
+                $count = count($paiements->getDenormalizedData());
+            }
 
             $paiements = $this->paginator->paginate(
                 $paiements->getDenormalizedData(),
                 $request->query->getInt('page', 1),
-                10);
+                $count);
 
             $is_filter_year = false;
+
         }
 
         // sous total
