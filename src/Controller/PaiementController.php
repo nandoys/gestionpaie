@@ -366,6 +366,7 @@ class PaiementController extends AbstractController
                 10);
 
             $paginator->setPaginatorOptions(['pageParameterName' => 'page-periode-'.$periode['mois'].$periode['annee'] ]);
+            $paginator->setParam('_fragment', $periode['mois'].$periode['annee']);
 
             $bulletins[] = [
                 'mois' => $periode['mois'],
