@@ -137,7 +137,9 @@ class RapportController extends AbstractController
             'formFiltreMois' => $formFiltreMois->createView(),
             'isTrimestre' => $request->query->has('trimestre'),
             'is_filter_year' => $is_filter_year,
-            'formData' => $formFiltreMois->getData()
+            'formData' => $formFiltreMois->getData(),
+            'debut_exercice' => $exercice->getDebutAnnee()->format('Y'),
+            'fin_exercice' => $exercice->getFinAnnee()->format('Y')
         ]);
     }
 }

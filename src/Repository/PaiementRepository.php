@@ -40,6 +40,17 @@ class PaiementRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByAgentInPeriod($startPeriod, $endPeriod, $agent) {
+        return $this->createQueryBuilder('p')
+            ->where('p.dateAt >= :startPeriod')
+            ->andWhere('p.dateAt <= :endPeriod')
+            ->andWhere('p.agent = :agent')
+            ->orderBy('p.dateAt', 'DESC')
+            ->setParameters(compact('agent', 'startPeriod', 'endPeriod'))
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findPaymentsByDate($month, $agent, $paieId = 0) {
         return $this->createQueryBuilder('p')
                 ->where('MONTH(p.dateAt) = :month')

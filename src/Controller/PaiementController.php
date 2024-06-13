@@ -58,11 +58,9 @@ class PaiementController extends AbstractController
     {
         $exercice = $this->repoExercice->findOneByEstCloture(false);
 
-        $paiements = $this->repoPaie->findByAgent($agent);
-
         // concerne la partie avance salaire
         $avancesSalaire = $this->paginator->paginate(
-            $repoAvance->findBy(['agent' => $agent, 'exercice' => $exercice], ['dateAt' => 'DESC']),
+            $repoAvance->findBy(compact('agent', 'exercice'), ['dateAt' => 'DESC']),
             $request->query->getInt('page-avance-salaire', 1),
             15 /*limit per page*/
         );
@@ -104,7 +102,7 @@ class PaiementController extends AbstractController
 
         // concerne la partie de prêt
         $prets = $this->paginator->paginate(
-            $this->repoPret->findBy(['agent' => $agent, 'exercice' => $exercice], ['dateAt' => 'DESC']),
+            $this->repoPret->findBy(compact('agent', 'exercice'), ['dateAt' => 'DESC']),
             $request->query->getInt('page-pret', 1),
             15 /*limit per page*/
         );
@@ -147,7 +145,7 @@ class PaiementController extends AbstractController
         $formUpload = $this->createForm(ImportFileType::class);
 
         $paiements = $this->paginator->paginate(
-            $this->repoPaie->findByAgent($agent, ['dateAt' => 'DESC']),
+            $this->repoPaie->findByAgentInPeriod($exercice->getDebutAnnee(), $exercice->getFinAnnee(), $agent),
             $request->query->getInt('page', 1),
             10 /*limit per page*/
         );
@@ -161,7 +159,9 @@ class PaiementController extends AbstractController
             'prets' => $prets,
             'form_pret' => $formPretAgent,
             'is_creating_pret' => $is_creating_pret,
-            'form_upload' => $formUpload
+            'form_upload' => $formUpload,
+            'debut_exercice' => $exercice->getDebutAnnee()->format('Y'),
+            'fin_exercice' => $exercice->getFinAnnee()->format('Y')
         ]);
     }
 
@@ -350,6 +350,7 @@ class PaiementController extends AbstractController
         }
 
         $exercice = $this->repoExercice->findOneByEstCloture(false);
+        
         $periodes = $dateRange->getMonthsInRange($exercice->getDebutAnnee(), $exercice->getFinAnnee());
 
         $bulletins = [];

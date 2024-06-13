@@ -6,7 +6,7 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="container" data-url-agent-liste="{{ path('paiement_agent_liste', {id: agent.id}) }}">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2 position-relative">
-        Liste des paiements 
+        Liste des paiements <h5>(Exercice: {{ debut_exercice }}-{{ fin_exercice }})</h5>
       </h1>
       <div class="btn-toolbar mb-2 mb-md-0">
         {% if agent.statusContrat == "en cours" %}
