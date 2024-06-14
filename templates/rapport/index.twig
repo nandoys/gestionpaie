@@ -110,6 +110,16 @@
                                     <td>{{ paiement.calculNetAPayer | number_format }} FC</td>
                                 </tr>
                             {% endfor %}
+                        <tfoot>
+                            <tr>
+                                <th>Sous total</th>
+                                <th>{{ totalTrimestriel[loop.index0].totalBrutImposable | number_format }} FC</th>
+                                <th>{{ totalTrimestriel[loop.index0].totalIndemnite | number_format }} FC</th>
+                                <th>{{ totalTrimestriel[loop.index0].totalSalaireBrut | number_format }} FC</th>
+                                <th>{{ totalTrimestriel[loop.index0].totalDeduction | number_format }} FC</th>
+                                <th>{{ totalTrimestriel[loop.index0].totalNetAPayer | number_format }} FC</th>
+                            </tr>
+                        </tfoot>
                         </tbody>
                     </table>
                     <div>

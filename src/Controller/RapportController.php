@@ -46,6 +46,8 @@ class RapportController extends AbstractController
 
         $paiementsTrimestriel = [];
 
+        $totalTrimestriel = [];
+
         for($i = 0; $i < count($trimestres); $i++) {
             $l = count($trimestres[$i]) - 1;
 
@@ -71,9 +73,32 @@ class RapportController extends AbstractController
 
             $paginator->setPaginatorOptions(['pageParameterName' => 'page-trimestre-'.$i +1]);
 
+            // sous total
+            $totalBrutImposable = 0;
+            $totalIndemnite = 0;
+            $totalSalaireBrut = 0;
+            $totalDeduction = 0;
+            $totalNetAPayer = 0;
+
+            foreach ($paginator->getItems() as $paie) {
+                $totalBrutImposable += $paie->calculBrutImposable();
+                $totalIndemnite += $paie->calculTotalIndemnite();
+                $totalSalaireBrut += $paie->calculSalaireBrut();
+                $totalDeduction += $paie->calculDeduction();
+                $totalNetAPayer += $paie->calculNetAPayer();
+            }
+
+            
+            $totalTrimestriel[] = [
+                "totalBrutImposable" => $totalBrutImposable,
+                "totalIndemnite" => $totalIndemnite,
+                "totalSalaireBrut" => $totalSalaireBrut,
+                "totalDeduction" => $totalDeduction,
+                "totalNetAPayer" => $totalNetAPayer,
+            ];
+
             $paiementsTrimestriel[] = $paginator;
-        }
-    
+        }    
 
         $paiementsQueryResults = $repoPaie->findNetPaymentGroupByAgent($exercice->getDebutAnnee(), $exercice->getFinAnnee());
 
@@ -137,6 +162,7 @@ class RapportController extends AbstractController
             'paiements' => $paiements,
             'sous_totaux' => $sous_totaux,
             'paiementsTrimestriel' => $paiementsTrimestriel,
+            'totalTrimestriel' => $totalTrimestriel,
             'minMoisFiltre' => $exercice->getDebutAnnee()->format('Y-m'),
             'maxMoisFiltre' => $exercice->getFinAnnee()->format('Y-m'),
             'formFiltreMois' => $formFiltreMois->createView(),
