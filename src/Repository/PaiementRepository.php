@@ -61,33 +61,15 @@ class PaiementRepository extends ServiceEntityRepository
                 ->getResult();
     }
 
-    public function findAnnualNetPaymentGroupByAgent($debutDate, $finDate) {
+    public function findNetPaymentGroupByAgent($debutDate, $finDate) {
         return $this->createQueryBuilder('p')
             ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
             SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
             SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
             SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
-            ->where('p.dateAt >= :debutDate')
-            ->andWhere('p.dateAt <= :finDate')
+            ->where('p.dateAt BETWEEN :debutDate AND :finDate')
             ->setParameters(compact('debutDate', 'finDate'))
-            ->groupBy('p.agent')
-            ->orderBy('a.nom', 'ASC')
-            ->join('p.agent', 'a')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findQuarterNetPaymentGroupByAgent($debutMois, $debutAnnee, $finMois, $finAnnee) {
-        return $this->createQueryBuilder('p')
-            ->select('SUM(p.cnss) AS cnss, SUM(p.ipr) AS ipr, SUM(p.avanceSalaire) AS avanceSalaire, SUM(p.pretLogement) AS pretLogement,
-            SUM(p.pretFraisScolaire) AS pretFraisScolaire,SUM(p.pretDeuil) AS pretDeuil, SUM(p.pretAutre) AS pretAutre, SUM(p.base) AS base,
-            SUM(p.primeDiplome) AS primeDiplome, SUM(p.heureSupplementaire) AS heureSupplementaire, SUM(p.transport) AS transport,
-            SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
-            SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
-            ->where('MONTH(p.dateAt) >= :debutMois AND YEAR(p.dateAt) = :debutAnnee')
-            ->orWhere('MONTH(p.dateAt) <= :finMois AND YEAR(p.dateAt) = :finAnnee')
-            ->setParameters(compact('debutMois', 'debutAnnee', 'finMois', 'finAnnee'))
             ->groupBy('p.agent')
             ->orderBy('a.nom', 'ASC')
             ->join('p.agent', 'a')

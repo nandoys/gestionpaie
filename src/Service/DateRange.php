@@ -35,6 +35,7 @@ class DateRange
         $j = 0; // index départ chunk
         $month = 0;
         $chunks = [];  
+        
         for ($i=count($this->months)-1; $i > -1; $i--) { 
             if ($month > 2) {
                 $month = 0;

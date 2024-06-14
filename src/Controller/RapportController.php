@@ -49,9 +49,13 @@ class RapportController extends AbstractController
         for($i = 0; $i < count($trimestres); $i++) {
             $l = count($trimestres[$i]) - 1;
 
-            $paiementsQueryResults = $repoPaie->findQuarterNetPaymentGroupByAgent(
-                $trimestres[$i][$l]['mois'], $trimestres[$i][$l]['annee'],$trimestres[$i][0]['mois'],$trimestres[$i][0]['annee'],
-            );
+            $debut_date_string = '01-'.$trimestres[$i][0]['mois'].'-'.$trimestres[$i][0]['annee'];
+            $fin_date_string = '31-'.$trimestres[$i][$l]['mois'].'-'.$trimestres[$i][$l]['annee'];
+
+            $debutDate = new \DateTime($debut_date_string);
+            $finDate = new \DateTime($fin_date_string);
+
+            $paiementsQueryResults = $repoPaie->findNetPaymentGroupByAgent($debutDate, $finDate);
 
             $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
@@ -71,7 +75,7 @@ class RapportController extends AbstractController
         }
     
 
-        $paiementsQueryResults = $repoPaie->findAnnualNetPaymentGroupByAgent($exercice->getDebutAnnee(), $exercice->getFinAnnee());
+        $paiementsQueryResults = $repoPaie->findNetPaymentGroupByAgent($exercice->getDebutAnnee(), $exercice->getFinAnnee());
 
         $paiements = new DenormaliseurPaie($paiementsQueryResults, $repoAgent, $this->em);
 
