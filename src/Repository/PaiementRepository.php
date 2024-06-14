@@ -86,7 +86,7 @@ class PaiementRepository extends ServiceEntityRepository
             SUM(p.logement) AS logement, SUM(p.allocationFamiliale) AS allocationFamiliale, SUM(p.autres) AS autres, SUM(p.abscence) AS abscence,
             SUM(p.exceptionnel) AS exceptionnel, a.id AS agent_id')
             ->where('MONTH(p.dateAt) >= :debutMois AND YEAR(p.dateAt) = :debutAnnee')
-            ->andWhere('MONTH(p.dateAt) <= :finMois AND YEAR(p.dateAt) = :finAnnee')
+            ->orWhere('MONTH(p.dateAt) <= :finMois AND YEAR(p.dateAt) = :finAnnee')
             ->setParameters(compact('debutMois', 'debutAnnee', 'finMois', 'finAnnee'))
             ->groupBy('p.agent')
             ->orderBy('a.nom', 'ASC')
